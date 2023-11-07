@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import Sidebar from '../sidebar';
 import Header from '../header';
@@ -9,11 +11,11 @@ type PropsType = {};
 function withSidebarAndHeader(WrappedComponent: WrappedComponentType) {
   return function (props: PropsType) {
     return (
-      <div className="flex bg-white">
+      <div className='flex bg-white text-black'>
         <div className='w-[16%]'>
-        <Sidebar />
+          <Sidebar />
         </div>
-        <div className="w-[84%]">
+        <div className='w-[84%]'>
           <Header />
           <WrappedComponent {...props} />
         </div>
