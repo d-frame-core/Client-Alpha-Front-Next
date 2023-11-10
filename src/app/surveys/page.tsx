@@ -93,17 +93,14 @@ function Profile() {
       setData(parsedData);
       const id = parsedData._id;
       await axios
-        .get(
-          `https://client-backend-402017.el.r.appspot.com/survey/client/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              clientid: id,
-            },
-          }
-        )
+        .get(`http://localhost:5000/survey/client/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            clientid: id,
+          },
+        })
         .then((res) => {
-          console.log('All Ads Details', res.data);
+          console.log('All Survey Details', res.data);
           setAllAdsDetails(res.data);
           setSingleDetails(res.data[0]);
         })

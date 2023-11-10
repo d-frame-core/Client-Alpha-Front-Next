@@ -7,8 +7,9 @@ import axios from 'axios';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button } from '@mui/material';
-
+import { Edit as EditIcon } from '@mui/icons-material';
 import { AppContext } from '@/context/context';
+import Image from 'next/image';
 interface CompanyData {
   companyAddress1: string;
   companyAddress2: string;
@@ -20,6 +21,7 @@ interface CompanyData {
   walletAddress: string;
   __v: number;
   _id: string;
+  profileImage: string;
 }
 
 function Profile() {
@@ -105,6 +107,29 @@ function Profile() {
     }, 2000);
   }
 
+  const handleFileChange = async (e: any) => {
+    const selectedFile = e.target.files[0];
+    // You can now handle the selected file (e.g., upload it or set it as a profile image)
+    const storedData = localStorage.getItem('dframeClientData');
+
+    const parsedData = JSON.parse(storedData as any);
+    setData(parsedData);
+    const id = parsedData._id;
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+    await fetch(`http://localhost:5000/users/image/${id}`, {
+      method: 'PATCH',
+
+      body: formData,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        alert('ERROR');
+        console.log(error);
+      });
+  };
   return (
     <div>
       <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
@@ -112,7 +137,51 @@ function Profile() {
 
         <div className='mt-4 bg-white rounded-lg p-6 flex mb-8 min-h-[70vh]'>
           <div className='w-[25%]'>
-            <div className='w-[160px] h-[160px] rounded-full bg-blue-300 mx-auto'></div>
+            <div className='w-[160px] h-[160px] rounded-full mx-auto'>
+              {!showEditForm ? (
+                <Image
+                  src={data?.profileImage ? data.profileImage : ''}
+                  width={160}
+                  height={160}
+                  alt='Profile'
+                  className='rounded-full w-[160px] h-[160px] border-4 border-blue-300'
+                />
+              ) : (
+                <div className='relative'>
+                  <div className='relative'>
+                    {/* Display the selected image */}
+                    <img
+                      src={data?.profileImage}
+                      width={160}
+                      height={160}
+                      alt='Selected Image'
+                      className='rounded-full border border-blue-300 w-[160px] h-[160px]'
+                    />
+
+                    {/* Pencil edit icon */}
+                    <div className='absolute top-0 right-0 p-2 cursor-pointer'>
+                      <EditIcon />
+                    </div>
+                  </div>
+
+                  {/* Input for selecting a new image */}
+                  <input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleFileChange}
+                    className='hidden'
+                    id='imageInput' // Add an id for the label to refer to
+                  />
+
+                  {/* Label to trigger the file input */}
+                  <label
+                    htmlFor='imageInput'
+                    className='absolute top-0 right-0 p-2 cursor-pointer'>
+                    <EditIcon />
+                  </label>
+                </div>
+              )}
+            </div>
           </div>
           <div className='w-[75%]'>
             {data ? (
