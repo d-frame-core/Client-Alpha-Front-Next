@@ -25,6 +25,7 @@ const CreateSurveyPopup = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -39,55 +40,65 @@ const CreateSurveyPopup = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const onSubmit = async (e: any) => {
-    // Create a new FormData object
-    e.preventDefault();
-    const formData = new FormData();
 
-    // Append values from the form to the FormData object
-    formData.append('surveyName', watch('surveyName'));
-    formData.append('surveyDescription', watch('surveyDescription'));
-    formData.append('totalReward', watch('totalReward'));
-    formData.append('startDate', watch('startDate'));
-    formData.append('endDate', watch('endDate'));
+  const onSubmit = async (formData: any) => {
+    try {
+      const storedData = localStorage.getItem('dframeClientData');
+      const token = localStorage.getItem('tokenForClient');
+      const parsedData = JSON.parse(storedData as any);
+      const clientId = parsedData._id;
+      const formattedStartDate = new Date(
+        formData.startDate
+      ).toLocaleDateString('en-GB');
+      const formattedEndDate = new Date(formData.endDate).toLocaleDateString(
+        'en-GB'
+      );
 
-    // Append totalQues array to FormData
-    formData.append('totalQues', JSON.stringify(watch('totalQues')));
+      // Update the formData with formatted dates
+      formData.startDate = formattedStartDate;
+      formData.endDate = formattedEndDate;
+      const requestData = {
+        clientId,
+        surveyName: formData.surveyName,
+        surveyDescription: formData.surveyDescription,
+        totalReward: formData.totalReward,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        totalQues: formData.totalQues.map((question: any, index: any) => ({
+          questionNumber: index + 1,
+          title: question.title,
+          options: [question.options[0], question.options[1]],
+          userAnswers: [],
+        })),
+        userAssigned: [],
+        totalRes: 0,
+        statusCampaign: 'UNVERIFIED',
+      };
 
-    const storedData = localStorage.getItem('dframeClientData');
-    const token = localStorage.getItem('tokenForClient');
+      const response = await axios.post(
+        'http://localhost:5000/survey/addSurvey',
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            clientid: clientId,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      const id = parsedData._id;
+      console.log('Response from addSurvey:', response.data);
 
-      // Append clientId and statusCampaign to FormData
-      formData.append('clientId', id);
-      formData.append('statusCampaign', 'active');
-
-      console.log('formData:', formData);
-
-      try {
-        // Use axios to make the POST request with FormData
-        const response = await axios.post(
-          'https://localhost:5000/survey/addSurvey',
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              clientid: id,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-
-        console.log('Response from addSurvey:', response.data);
-      } catch (error) {
-        console.error('Error from addSurvey:', error);
-      }
+      // Close the dialog or handle success as needed
+      handleClose();
+    } catch (error) {
+      console.error('Error from addSurvey:', error);
     }
   };
-
+  const storedData = localStorage.getItem('dframeClientData');
+  const parsedData = JSON.parse(storedData as any);
+  const id = parsedData._id;
+  // console.log(id);
   return (
     <div>
       <Button
@@ -102,7 +113,7 @@ const CreateSurveyPopup = () => {
         <DialogTitle>Create Survey</DialogTitle>
         <DialogContent>
           <form
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className='flex flex-col gap-4 min-w-[500px] py-2'>
             <Controller
               name='surveyName'

@@ -204,11 +204,7 @@ function Profile() {
                     align='center'>
                     View
                   </StyledTableCell>
-                  <StyledTableCell
-                    className='border-2 border-blue-600 text-center'
-                    align='center'>
-                    Status
-                  </StyledTableCell>
+
                   <StyledTableCell
                     className='border-2 border-blue-600 text-center'
                     align='center'>
@@ -248,7 +244,7 @@ function Profile() {
                       onClick={() => handleClickOpen(index)}>
                       <VisibilityIcon />
                     </StyledTableCell>
-                    <StyledTableCell align='center'>
+                    {/* <StyledTableCell align='center'>
                       <div
                         className='statusCampaignDetails'
                         onClick={(e) => e.stopPropagation()}>
@@ -268,7 +264,7 @@ function Profile() {
                           />
                         )}
                       </div>
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                     <StyledTableCell align='right'>
                       {row.totalReward}
                     </StyledTableCell>

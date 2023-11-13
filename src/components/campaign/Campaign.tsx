@@ -33,6 +33,8 @@ const CreateSurveyPopup = () => {
   const [tagsExist, setTagsExist] = useState(false);
   const [bidAmountError, setBidAmountError] = useState('');
   const [bidAmount, setBidAmount] = useState('');
+  const [startDateDisplay, setStartDateDisplay] = useState<any>();
+  const [endDateDisplay, setEndDateDisplay] = useState<any>();
   const {
     control,
     handleSubmit,
@@ -67,13 +69,15 @@ const CreateSurveyPopup = () => {
     setAdTags(adTags.filter((_: any, index: any) => index !== indexToRemove));
   };
   const handleStartDateChange = (event: any) => {
-    const startDate = event.target.value;
-    setAdStartDate(startDate);
-
-    const currentDate = new Date().toISOString().slice(0, 10);
-    if (startDate < currentDate) {
+    setStartDateDisplay(event.target.value);
+    const selectedDate = new Date(event.target.value);
+    const formattedDate = selectedDate.toLocaleDateString('en-GB');
+    setAdStartDate(formattedDate);
+    const currentDate = new Date().toLocaleDateString('en-GB');
+    if (formattedDate < currentDate) {
       setAdStartDate('');
       setAdEndDate('');
+      setStartDateDisplay('');
       setDateError('Start Date should be greater than the current date');
     } else {
       setDateError('');
@@ -82,11 +86,13 @@ const CreateSurveyPopup = () => {
 
   //  function to handle the end date change
   const handleEndDateChange = (event: any) => {
-    const endDate = event.target.value;
-    setAdEndDate(endDate);
-
-    if (endDate <= adStartDate) {
+    setEndDateDisplay(event.target.value);
+    const selectedDate = new Date(event.target.value);
+    const formattedDate = selectedDate.toLocaleDateString('en-GB');
+    setAdEndDate(formattedDate);
+    if (formattedDate <= adStartDate) {
       setAdEndDate('');
+      setEndDateDisplay('');
       setDateError('End Date should be greater than the Start Date');
     } else {
       setDateError('');
@@ -127,15 +133,17 @@ const CreateSurveyPopup = () => {
 
     await fetch(`http://localhost:5000/ads/test/createAd`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
-      },
+
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
-        setOpen(false);
         console.log(data);
+        setTimeout(() => {
+          setOpen(false);
+
+          window.location.reload();
+        }, 1000);
       })
       .catch((error) => console.log(error));
   }
@@ -378,7 +386,7 @@ const CreateSurveyPopup = () => {
                   placeholder='Start Date'
                   type='date'
                   sx={{ left: '2vw', width: '90%', marginTop: '1.5vh' }}
-                  value={adStartDate}
+                  value={startDateDisplay}
                   onChange={handleStartDateChange}
                   required
                 />
@@ -388,7 +396,7 @@ const CreateSurveyPopup = () => {
                   variant='standard'
                   type='date'
                   sx={{ left: '2vw', width: '90%', marginTop: '1.5vh' }}
-                  value={adEndDate}
+                  value={endDateDisplay}
                   onChange={handleEndDateChange}
                   required
                 />
