@@ -93,12 +93,15 @@ function Profile() {
       setData(parsedData);
       const id = parsedData._id;
       await axios
-        .get(`http://localhost:5000/survey/client/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            clientid: id,
-          },
-        })
+        .get(
+          `https://client-backend-402017.el.r.appspot.com/survey/client/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              clientid: id,
+            },
+          }
+        )
         .then((res) => {
           console.log('All Survey Details', res.data);
           setAllAdsDetails(res.data);
@@ -204,11 +207,7 @@ function Profile() {
                     align='center'>
                     View
                   </StyledTableCell>
-                  <StyledTableCell
-                    className='border-2 border-blue-600 text-center'
-                    align='center'>
-                    Status
-                  </StyledTableCell>
+
                   <StyledTableCell
                     className='border-2 border-blue-600 text-center'
                     align='center'>
@@ -248,7 +247,7 @@ function Profile() {
                       onClick={() => handleClickOpen(index)}>
                       <VisibilityIcon />
                     </StyledTableCell>
-                    <StyledTableCell align='center'>
+                    {/* <StyledTableCell align='center'>
                       <div
                         className='statusCampaignDetails'
                         onClick={(e) => e.stopPropagation()}>
@@ -268,7 +267,7 @@ function Profile() {
                           />
                         )}
                       </div>
-                    </StyledTableCell>
+                    </StyledTableCell> */}
                     <StyledTableCell align='right'>
                       {row.totalReward}
                     </StyledTableCell>

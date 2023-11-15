@@ -46,7 +46,7 @@ const tabOptions: TabOptionInterface[] = [
     link: '/setting',
   },
 ];
-function Sidebar() {
+function MobileSidebar() {
   function TabBar({ data }: { data: TabOptionInterface }) {
     return (
       <Link href={data.link}>
@@ -70,7 +70,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`md:w-[100%] h-[100vh] bg-gradient-to-b from-indigo-700 via-sky-600 to-cyan-500 shadow border border-black`}>
+      className={`md:w-[100%] h-[99vh] bg-gradient-to-b from-indigo-700 via-sky-600 to-cyan-500 shadow border border-black text-xl`}>
       {/* logo */}
 
       <div>
@@ -87,7 +87,7 @@ function Sidebar() {
       </div>
 
       {/* simple Tabs */}
-      <ul className='mt-8 bg-[#1B2B65] py-2'>
+      <ul className='mt-12 bg-[#1B2B65] py-2'>
         {tabOptions.map((singleTab: TabOptionInterface, index: Number) => (
           <li>
             <TabBar data={singleTab} />
@@ -96,7 +96,7 @@ function Sidebar() {
       </ul>
 
       {/* help and learn  */}
-      <div className='bg-[#1B2B65] w-[85%] mx-auto mt-20 rounded-lg text-center text-white pb-2'>
+      <div className='bg-[#1B2B65] w-[85%] mx-auto mt-24 rounded-lg text-center text-white pb-2'>
         <div className='relative'>
           <div className='m-auto absolute -top-4 left-[40%] bg-[#AABBFA] w-10 h-10 pt-[4px] rounded-full'>
             <div className='m-auto  bg-[#1B2B65] w-8 h-8 pt-[3px] text-[20px] rounded-full'>
@@ -120,4 +120,4 @@ function Sidebar() {
     </div>
   );
 }
-export default Sidebar;
+export default MobileSidebar;

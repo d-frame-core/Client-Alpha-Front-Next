@@ -102,11 +102,14 @@ function Profile() {
       setData(parsedData);
       const id = parsedData._id;
       await axios
-        .get(`http://localhost:5000/ads/clientAllAds/${id}`, {
-          headers: {
-            id: id,
-          },
-        })
+        .get(
+          `https://client-backend-402017.el.r.appspot.com/ads/clientAllAds/${id}`,
+          {
+            headers: {
+              id: id,
+            },
+          }
+        )
         .then((res) => {
           console.log('All Ads Details', res.data);
           setAllAdsDetails(res.data);
@@ -119,16 +122,19 @@ function Profile() {
   }
 
   async function editAdFunction() {
-    await fetch(`http://localhost:5000/ads/${singleDetails._id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        adName: adName,
-        adContent: adContent,
-      }),
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com/ads/${singleDetails._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          adName: adName,
+          adContent: adContent,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setOpen(false);
@@ -144,7 +150,7 @@ function Profile() {
     const parsedData = JSON.parse(storedData as any);
     setData(parsedData);
     const id = parsedData._id;
-    await fetch(`http://localhost:5000/bids/${id}`, {
+    await fetch(`https://client-backend-402017.el.r.appspot.com/bids/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-type': 'application/json',
