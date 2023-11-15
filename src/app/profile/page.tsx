@@ -46,7 +46,9 @@ function Profile() {
   };
   useEffect(() => {
     // Retrieve the data from localStorage
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
@@ -73,7 +75,9 @@ function Profile() {
       formData.append('image', file);
 
       // Send the image to the backend using Axios
-      const id = localStorage.getItem('clientId');
+      const id =
+        typeof window !== 'undefined' &&
+        window.localStorage.getItem('clientId');
       console.log('id', id);
       await axios
         .patch(
@@ -86,7 +90,8 @@ function Profile() {
           const _imageUrl = response.data.imageUrl;
           // setImageUrl(_imageUrl);
           setImage(response.data.imageUrl);
-          localStorage.setItem('imageUrl', response.data.imageUrl);
+          typeof window !== 'undefined' &&
+            window.localStorage.setItem('imageUrl', response.data.imageUrl);
           console.log(image);
           fetchUserData();
           window.location.reload();
@@ -106,10 +111,13 @@ function Profile() {
       }
     );
 
-    localStorage.setItem('tokenForClient', response.data.token);
-    localStorage.setItem('walletAddress', clientData?.walletAddress);
+    typeof window !== 'undefined' &&
+      window.localStorage.setItem('tokenForClient', response.data.token);
+    typeof window !== 'undefined' &&
+      window.localStorage.setItem('walletAddress', clientData?.walletAddress);
     const data = response.data.user;
-    localStorage.setItem('dframeClientData', JSON.stringify(data));
+    typeof window !== 'undefined' &&
+      window.localStorage.setItem('dframeClientData', JSON.stringify(data));
   }
 
   function copyAddress() {
@@ -129,7 +137,7 @@ function Profile() {
   const handleFileChange = async (e: any) => {
     const selectedFile = e.target.files[0];
     // You can now handle the selected file (e.g., upload it or set it as a profile image)
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData = window.localStorage.getItem('dframeClientData');
 
     const parsedData = JSON.parse(storedData as any);
     setData(parsedData);

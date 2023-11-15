@@ -86,8 +86,12 @@ function Profile() {
   }, []);
 
   async function getAllCampaigns() {
-    const storedData = localStorage.getItem('dframeClientData');
-    const token = localStorage.getItem('tokenForClient');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
+    const token =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('tokenForClient');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
@@ -151,7 +155,9 @@ function Profile() {
   }
 
   async function deleteParticularSurvey(surveyId: any) {
-    const token = localStorage.getItem('tokenForClient');
+    const token =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('tokenForClient');
     setSurveyDeletedToaster(true);
     const res = await axios.delete(
       `https://client-backend-402017.el.r.appspot.com/survey/deleteSurvey/${surveyId}`,

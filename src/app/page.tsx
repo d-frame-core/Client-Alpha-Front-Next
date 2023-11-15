@@ -23,10 +23,13 @@ export default function Home() {
       if (response.data.message === 'No address found please Signup') {
         router.push('/register', { scroll: false });
       } else {
-        localStorage.setItem('tokenForClient', response.data.token);
-        localStorage.setItem('walletAddress', address);
+        typeof window !== 'undefined' &&
+          window.localStorage.setItem('tokenForClient', response.data.token);
+        typeof window !== 'undefined' &&
+          window.localStorage.setItem('walletAddress', address);
         const data = response.data.user;
-        localStorage.setItem('dframeClientData', JSON.stringify(data));
+        typeof window !== 'undefined' &&
+          window.localStorage.setItem('dframeClientData', JSON.stringify(data));
         router.push('/profile', { scroll: false });
       }
     } catch (error) {

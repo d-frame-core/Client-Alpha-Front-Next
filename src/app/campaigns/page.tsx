@@ -96,7 +96,9 @@ function Profile() {
   }, []);
 
   async function getAllCampaigns() {
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
@@ -146,7 +148,9 @@ function Profile() {
       .catch((error) => console.log(error));
   }
   async function editBidFunction() {
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
     const parsedData = JSON.parse(storedData as any);
     setData(parsedData);
     const id = parsedData._id;

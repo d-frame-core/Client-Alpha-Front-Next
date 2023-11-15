@@ -43,8 +43,12 @@ const CreateSurveyPopup = () => {
 
   const onSubmit = async (formData: any) => {
     try {
-      const storedData = localStorage.getItem('dframeClientData');
-      const token = localStorage.getItem('tokenForClient');
+      const storedData =
+        typeof window !== 'undefined' &&
+        window.localStorage.getItem('dframeClientData');
+      const token =
+        typeof window !== 'undefined' &&
+        window.localStorage.getItem('tokenForClient');
       const parsedData = JSON.parse(storedData as any);
       const clientId = parsedData._id;
       const formattedStartDate = new Date(
@@ -97,7 +101,9 @@ const CreateSurveyPopup = () => {
       console.error('Error from addSurvey:', error);
     }
   };
-  const storedData = localStorage.getItem('dframeClientData');
+  const storedData =
+    typeof window !== 'undefined' &&
+    window.localStorage.getItem('dframeClientData');
   const parsedData = JSON.parse(storedData as any);
   const id = parsedData._id;
   // console.log(id);

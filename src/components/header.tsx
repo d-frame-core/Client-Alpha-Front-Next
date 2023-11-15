@@ -9,7 +9,9 @@ function Header() {
   const { setClientData, clientData } = useContext(AppContext);
   useEffect(() => {
     // Retrieve the data from localStorage
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
 

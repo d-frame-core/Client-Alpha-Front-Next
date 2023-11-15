@@ -57,8 +57,12 @@ const CreateSurveyPopup = () => {
   };
   const onSubmit = async (data: any) => {
     console.log('data for campaign', data);
-    const storedData = localStorage.getItem('dframeClientData');
-    const token = localStorage.getItem('tokenForClient');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
+    const token =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('tokenForClient');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       const id = parsedData._id;
@@ -111,7 +115,7 @@ const CreateSurveyPopup = () => {
 
   async function createNewCampaign() {
     setOpen(false);
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData = window.localStorage.getItem('dframeClientData');
     const parsedData = JSON.parse(storedData as any);
 
     const id = parsedData._id;

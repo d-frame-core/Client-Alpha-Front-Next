@@ -154,7 +154,9 @@ function DataPool() {
   useEffect(() => {
     // Retrieve the data from localStorage
     fetchData();
-    const storedData = localStorage.getItem('dframeClientData');
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
@@ -204,8 +206,10 @@ function DataPool() {
             {(selectedTagData as any).length > 0 ? (
               <div className='bg-blue-200 text-sm w-full overflow-y-auto'>
                 {selectedTagData &&
-                  selectedTagData.map((item: any) => (
-                    <div className='md:py-3 py-5 border-b-2 border-gray-200 flex items-center justify-between md:px-20 px-2 md:text-sm text-xl'>
+                  selectedTagData.map((item: any, index: any) => (
+                    <div
+                      className='md:py-3 py-5 border-b-2 border-gray-200 flex items-center justify-between md:px-20 px-2 md:text-sm text-xl'
+                      key={index}>
                       <div>{item.name}</div>
                       <div>{item.visitorCounts} Times</div>
                     </div>
