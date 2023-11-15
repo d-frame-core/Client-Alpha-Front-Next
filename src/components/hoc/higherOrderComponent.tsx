@@ -10,7 +10,7 @@ type WrappedComponentType = React.ComponentType<any>; // You can provide a more 
 type PropsType = {};
 
 function withSidebarAndHeader(WrappedComponent: WrappedComponentType) {
-  return function (props: PropsType) {
+  const WithSidebarAndHeader = function (props: PropsType) {
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     const toggleMenu = () => {
@@ -41,6 +41,16 @@ function withSidebarAndHeader(WrappedComponent: WrappedComponentType) {
       </div>
     );
   };
+
+  WithSidebarAndHeader.displayName = `WithSidebarAndHeader(${getDisplayName(
+    WrappedComponent
+  )})`;
+
+  return WithSidebarAndHeader;
+}
+
+function getDisplayName(WrappedComponent: WrappedComponentType): string {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
 export default withSidebarAndHeader;

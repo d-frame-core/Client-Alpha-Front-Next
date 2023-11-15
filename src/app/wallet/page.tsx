@@ -152,6 +152,7 @@ function Wallet() {
                       <TransactionDetails
                         event={event}
                         sent={true}
+                        key={event.transactionHash}
                       />
                     );
                   } else {
@@ -159,6 +160,7 @@ function Wallet() {
                       <TransactionDetails
                         event={event}
                         sent={false}
+                        key={event.transactionHash}
                       />
                     );
                   }
