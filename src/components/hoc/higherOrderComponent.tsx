@@ -31,7 +31,7 @@ function withSidebarAndHeader(WrappedComponent: WrappedComponentType) {
             ☰
           </button>
         </div>
-        <div className='hidden md:block'>
+        <div className='hidden md:block w-[20%]'>
           <Sidebar />
         </div>
         <div className='md:w-[84%] w-full'>

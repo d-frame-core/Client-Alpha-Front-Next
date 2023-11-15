@@ -186,12 +186,12 @@ function Profile() {
 
   return (
     <div>
-      <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
+      <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 h-[90vh] overflow-y-auto '>
         <div className='flex justify-between'>
           <p className='text-[28px]'>Surveys</p>
           <CreateSurveyPopup />
         </div>
-        <div className='mt-4 bg-white flex rounded-lg mb-4 min-h-[70vh] overflow-auto '>
+        <div className='mt-4 bg-white flex rounded-lg mb-4 min-h-[69vh] h-[69vh] overflow-auto '>
           <TableContainer component={Paper}>
             <Table
               sx={{ minWidth: 700 }}

@@ -183,7 +183,7 @@ function Profile() {
           <p className='text-[28px]'>Campaigns</p>
           <CreateCampaignForm />
         </div>
-        <div className='mt-4 bg-white flex rounded-lg mb-4 min-h-[70vh] overflow-auto '>
+        <div className='mt-4 bg-white flex rounded-lg mb-4 min-h-[69vh] h-[69vh] overflow-auto '>
           <TableContainer component={Paper}>
             <Table
               sx={{ minWidth: 700 }}
