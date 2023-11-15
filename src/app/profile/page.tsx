@@ -88,6 +88,8 @@ function Profile() {
           setImage(response.data.imageUrl);
           localStorage.setItem('imageUrl', response.data.imageUrl);
           console.log(image);
+          fetchUserData();
+          window.location.reload();
         })
         .catch((error) => {
           console.log('image error');

@@ -88,8 +88,8 @@ function Sidebar() {
 
       {/* simple Tabs */}
       <ul className='mt-8 bg-[#1B2B65] py-2'>
-        {tabOptions.map((singleTab: TabOptionInterface, index: Number) => (
-          <li>
+        {tabOptions.map((singleTab: TabOptionInterface, index: any) => (
+          <li key={index}>
             <TabBar data={singleTab} />
           </li>
         ))}

@@ -49,7 +49,9 @@ const tabOptions: TabOptionInterface[] = [
 function MobileSidebar() {
   function TabBar({ data }: { data: TabOptionInterface }) {
     return (
-      <Link href={data.link}>
+      <Link
+        href={data.link}
+        key={data.name}>
         <div className='py-[4px] pl-6'>
           {typeof window !== 'undefined' &&
           window.location.pathname === data.link ? (
@@ -88,8 +90,8 @@ function MobileSidebar() {
 
       {/* simple Tabs */}
       <ul className='mt-12 bg-[#1B2B65] py-2'>
-        {tabOptions.map((singleTab: TabOptionInterface, index: Number) => (
-          <li>
+        {tabOptions.map((singleTab: TabOptionInterface, index: any) => (
+          <li key={index}>
             <TabBar data={singleTab} />
           </li>
         ))}
