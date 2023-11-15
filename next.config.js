@@ -1,4 +1,17 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {}
+/**
+ * @format
+ * @type {import('next').NextConfig}
+ */
 
-module.exports = nextConfig
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+    ],
+  },
+};
+
+module.exports = nextConfig;
