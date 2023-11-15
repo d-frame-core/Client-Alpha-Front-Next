@@ -131,11 +131,14 @@ const CreateSurveyPopup = () => {
     formData.append('totalDays', totalDaysToRun); // Append the image file
     formData.append('perDay', perDayBudget); // Append the image file
 
-    await fetch(`http://localhost:5000/ads/test/createAd`, {
-      method: 'POST',
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com/ads/test/createAd`,
+      {
+        method: 'POST',
 
-      body: formData,
-    })
+        body: formData,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

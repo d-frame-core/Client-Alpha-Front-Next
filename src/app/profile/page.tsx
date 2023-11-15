@@ -40,6 +40,9 @@ function Profile() {
     // Handle the form submission, formData will contain the updated values
     console.log(formData);
     // You can update the data in your state or perform other actions here
+    setTimeout(() => {
+      fetchUserData();
+    }, 1000);
   };
   useEffect(() => {
     // Retrieve the data from localStorage
@@ -93,6 +96,20 @@ function Profile() {
     };
   };
 
+  async function fetchUserData() {
+    const response = await axios.post(
+      'https://client-backend-402017.el.r.appspot.com/users/login',
+      {
+        walletAddress: clientData?.walletAddress,
+      }
+    );
+
+    localStorage.setItem('tokenForClient', response.data.token);
+    localStorage.setItem('walletAddress', clientData?.walletAddress);
+    const data = response.data.user;
+    localStorage.setItem('dframeClientData', JSON.stringify(data));
+  }
+
   function copyAddress() {
     const tempInput = document.createElement('input');
     tempInput.value = data?.walletAddress || 'nothing to copy';
@@ -117,11 +134,14 @@ function Profile() {
     const id = parsedData._id;
     const formData = new FormData();
     formData.append('image', selectedFile);
-    await fetch(`http://localhost:5000/users/image/${id}`, {
-      method: 'PATCH',
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com/users/image/${id}`,
+      {
+        method: 'PATCH',
 
-      body: formData,
-    })
+        body: formData,
+      }
+    )
       .then((response) => {
         console.log(response);
       })

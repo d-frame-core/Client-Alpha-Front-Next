@@ -30,17 +30,19 @@ function Wallet() {
 
   const [walletBalance, setWalletBalance] = useState<String>('');
   async function fetchDataFromBackend() {
-    await axios
-      .get(
-        `http://localhost:5000/wallet/past-transactions/${clientData.walletAddress}`
-      )
-      .then((res) => {
-        console.log('showind wallet data', res.data);
-        setPastTransactions(res.data.pastTransactions);
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com/wallet/past-transactions/${clientData.walletAddress}`,
+      {
+        method: 'GET',
+        cache: 'force-cache',
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('showind wallet data', data);
+        setPastTransactions((data as any).pastTransactions);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((error) => console.log('error fetching waller', error));
   }
   function copyWalletAddress() {
     navigator.clipboard.writeText((data as any).walletAddress);

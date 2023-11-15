@@ -76,7 +76,7 @@ const CreateSurveyPopup = () => {
       };
 
       const response = await axios.post(
-        'http://localhost:5000/survey/addSurvey',
+        'https://client-backend-402017.el.r.appspot.com/survey/addSurvey',
         requestData,
         {
           headers: {
@@ -90,7 +90,9 @@ const CreateSurveyPopup = () => {
       console.log('Response from addSurvey:', response.data);
 
       // Close the dialog or handle success as needed
+
       handleClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error from addSurvey:', error);
     }

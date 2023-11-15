@@ -23,6 +23,8 @@ interface CompanyData {
 function DataPool() {
   const { setClientData, clientData } = useContext(AppContext);
   const [data, setData] = useState<CompanyData>();
+  const [tagsData, setTagsData] = useState();
+  const [selectedTagData, setSelectedTagData] = useState<any>();
   const [selectedTag, setSelectedTag] = useState<string | null>('Crypto');
 
   const tags = [
@@ -33,9 +35,9 @@ function DataPool() {
     'Sports',
     'Fashion',
     'Music',
-    'Health',
-    'Science',
-    'Gaming',
+    // 'Health',
+    // 'Science',
+    // 'Gaming',
   ];
   const ma = useMediaQuery('(min-width:880px)');
   var h: number = 240;
@@ -144,12 +146,14 @@ function DataPool() {
     ? datasets.find((dataset) => dataset.tag === selectedTag)?.data || []
     : [];
 
-  const handleTagClick = (tag: string) => {
-    setSelectedTag(tag);
+  const handleTagClick = (tag: any) => {
+    console.log(tag);
+    setSelectedTagData(tag.websites);
   };
 
   useEffect(() => {
     // Retrieve the data from localStorage
+    fetchData();
     const storedData = localStorage.getItem('dframeClientData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
@@ -157,47 +161,65 @@ function DataPool() {
       setClientData(parsedData);
     }
   }, []);
-  console.log(datasets);
+
+  async function fetchData() {
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com/websites/admin/dataPool',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setTagsData(data);
+        setSelectedTagData(data[0].websites);
+      })
+      .catch((error) => console.log(error));
+  }
   return (
     <div>
       <div className='flex overflow-x-auto bg-blue-300'>
-        {tags.map((tag) => (
-          <div
-            key={tag}
-            className={`cursor-pointer w-full text-center border px-2 py-1 ${
-              selectedTag === tag
-                ? 'bg-white border-blue-900 border-2 text-black'
-                : ' bg-blue-200 text-black'
-            }`}
-            onClick={() => handleTagClick(tag)}>
-            {tag}
-          </div>
-        ))}
+        {tagsData &&
+          (tagsData as any).map((tag: any) => (
+            <div
+              key={tag.tag}
+              className={`cursor-pointer w-full text-center border px-2 py-1 ${
+                selectedTag === tag
+                  ? 'bg-white border-blue-900 border-2 text-black'
+                  : ' bg-blue-200 text-black'
+              }`}
+              onClick={() => handleTagClick(tag)}>
+              {tag.tag}
+            </div>
+          ))}
       </div>
-      <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
-        <p className='text-[28px]'>DataPool</p>
-        <div className='mt-4 bg-white rounded-lg p-6 flex flex-col mb-8 min-h-[70vh]'>
-          {/* Render your pie chart here using selectedDataset */}
-          {Charts(selectedDataset as any[], 'visits', h, w, ma)}
+      {selectedTagData && (
+        <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
+          <p className='text-[28px]'>DataPool</p>
+          <div className='mt-4 bg-white rounded-lg p-6 flex flex-col mb-8 min-h-[70vh]'>
+            {/* Render your pie chart here using selectedDataset */}
+            {Charts(selectedTagData as any[], 'visitorCounts', h, w, ma)}
 
-          {selectedDataset.length > 0 ? (
-            <div className='bg-blue-200 text-sm w-full overflow-y-auto'>
-              {selectedDataset &&
-                selectedDataset.map((item: any) => (
-                  <div className='md:py-3 py-5 border-b-2 border-gray-200 flex items-center justify-between md:px-20 px-2 md:text-sm text-xl'>
-                    <div>{item.name}</div>
-                    <div>{item.visits} Times</div>
-                  </div>
-                ))}
-            </div>
-          ) : (
-            <div className='w-full h-full flex justify-center items-center text-3xl'>
-              **Minimum 6 hours of data needed**
-            </div>
-          )}
+            {(selectedTagData as any).length > 0 ? (
+              <div className='bg-blue-200 text-sm w-full overflow-y-auto'>
+                {selectedTagData &&
+                  selectedTagData.map((item: any) => (
+                    <div className='md:py-3 py-5 border-b-2 border-gray-200 flex items-center justify-between md:px-20 px-2 md:text-sm text-xl'>
+                      <div>{item.name}</div>
+                      <div>{item.visitorCounts} Times</div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className='w-full h-full flex justify-center items-center text-3xl'>
+                **Minimum 6 hours of data needed**
+              </div>
+            )}
+          </div>
+          {/* Additional content */}
         </div>
-        {/* Additional content */}
-      </div>
+      )}
     </div>
   );
 }
