@@ -9,6 +9,8 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Web3 from 'web3';
 import { AppContext } from '@/context/context';
 import TransactionDetails from '@/components/TransactionDetails';
+import { Box, Divider, Modal, TextField } from '@mui/material';
+import { useForm } from 'react-hook-form';
 function Wallet() {
   interface CompanyData {
     companyAddress1: string;
@@ -22,16 +24,38 @@ function Wallet() {
     __v: number;
     _id: string;
   }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const [data, setData] = useState<CompanyData>();
+  const [buyDFTModal, setBuyDFTModal] = useState(false);
+  const [amountToBuy, setAmountToBuy] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [pastTransactions, setPastTransactions] = useState<any[] | never[]>([]);
   const [sendWalletAddress, setSendWalletAddress] = useState<any>('');
   const { clientData, setClientData } = useContext(AppContext);
   const [sendDFTAmount, setSendDFTAmount] = useState<any>('');
 
   const [walletBalance, setWalletBalance] = useState<String>('');
+
+  const handleChange = (e: any) => {
+    const value = e.target.value;
+    // check the if statement that the value is ONLY between 0-9, no decimals, no spaces, nothing EXCEPT 0-9
+
+    if (value.match(/^[0-9]*$/gm)) {
+      setAmountToBuy(value);
+    } else {
+      // throw alert of invalid input
+      alert('Invalid input');
+      setAmountToBuy('');
+    }
+  };
   async function fetchDataFromBackend() {
     await fetch(
-      `https://client-backend-402017.el.r.appspot.com/wallet/past-transactions/${clientData.walletAddress}`,
+      `https://client-backend-402017.el.r.appspot.com/wallet/past-transactions/${clientData?.walletAddress}`,
       {
         method: 'GET',
         cache: 'force-cache',
@@ -59,16 +83,34 @@ function Wallet() {
       dframeAddress
     );
     //  get the balance of DFRAME tokens for the specified wallet address
-    const balance = await (dframeContract.methods as any)
-      .balanceOf(clientData.walletAddress)
-      .call();
-    const balanceInEth = web3.utils.fromWei(balance, 'ether');
+    if (clientData) {
+      const balance = await (dframeContract.methods as any)
+        .balanceOf(clientData.walletAddress)
+        .call();
+      const balanceInEth = web3.utils.fromWei(balance, 'ether');
 
-    const balanceInKFormat =
-      Math.trunc((balanceInEth as any) / 1000).toString() + 'k';
-    setWalletBalance(balanceInKFormat);
+      const balanceInKFormat =
+        Math.trunc((balanceInEth as any) / 1000).toString() + 'k';
+      setWalletBalance(balanceInKFormat);
+    }
   }
-
+  function buyDFTMail() {
+    // Rishabhkapoor8711@gmail.com
+    if (!amountToBuy || !paymentMethod) {
+      alert('Please enter the required fields');
+      return;
+    }
+    const email = 'Rishabhkapoor8711@gmail.com';
+    const subject = encodeURIComponent('I want to buy DFT Tokens');
+    const body = encodeURIComponent(
+      `Client Name:- ${clientData?.companyName}\nClient Address:-${clientData?.walletAddress}\nClient Balance:-${walletBalance} DFT\nClient Email:-${clientData?.companyEmail}\n....................................................................\n....................................................................\nI want to buy DFT worth ${amountToBuy}$ \nMy preferred payment method(FIAT/CRYPTO) is ${paymentMethod}\n...............................`
+    );
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+    setBuyDFTModal(false);
+    setAmountToBuy('');
+    setPaymentMethod('');
+  }
   useEffect(() => {
     fetchDataFromBackend();
     getBalance();
@@ -85,6 +127,8 @@ function Wallet() {
       setClientData(parsedData);
     }
   }, []);
+
+  console.log('cliend data', clientData);
   async function sendDFTFunction() {
     if (sendDFTAmount === '' || sendWalletAddress === '') {
       alert('Please enter the required fields');
@@ -105,7 +149,7 @@ function Wallet() {
     const tx = (dframeContract.methods as any)
       .transfer(sendWalletAddress, amount)
       .send({
-        from: clientData.walletAddress,
+        from: clientData?.walletAddress,
       })
       .on('transactionHash', function (hash: any) {
         console.log('Transaction Hash:', hash);
@@ -134,10 +178,38 @@ function Wallet() {
       fetchDataFromBackend();
     }, 1000);
   }
+
+  const handleOptionChange = (e: any) => {
+    setPaymentMethod(e.target.value);
+  };
+
+  const style2 = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 470,
+    height: 300,
+    bgcolor: 'white',
+    boxShadow: 24,
+    border: '0',
+    p: 3,
+    borderRadius: '1.1vh',
+    overflow: 'hidden',
+    color: 'black',
+  };
   return (
     <div>
       <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 h-[85vh] overflow-auto'>
-        <p className='text-[28px]'>Wallet</p>
+        <div className='flex justify-between mb-8 mt-3'>
+          <p className='text-[28px]'>Wallet</p>
+          <button
+            className='bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+            // onclick to redirect to the buy DFT page
+            onClick={() => setBuyDFTModal(true)}>
+            Buy DFT
+          </button>
+        </div>
         <div className='flex md:flex-row flex-col justify-evenly '>
           <div className='bg-white p-3 rounded-lg md:w-2/5 mx-auto w-11/12 flex justify-center items-center flex-col'>
             <div className='md:text-xl text-3xl pb-2 border-b-2 border-gray-300 text-center w-full font-semibold'>
@@ -148,7 +220,7 @@ function Wallet() {
                 {pastTransactions.map((event: any) => {
                   if (
                     event.returnValues.from.toString().toLowerCase() ===
-                    clientData.walletAddress.toString().toLowerCase()
+                    clientData?.walletAddress.toString().toLowerCase()
                   ) {
                     return (
                       <TransactionDetails
@@ -221,6 +293,76 @@ function Wallet() {
           </div>
         </div>
       </div>
+      <Modal
+        open={buyDFTModal}
+        onClose={() => setBuyDFTModal(false)}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'>
+        <Box sx={style2}>
+          <h1 style={{ textAlign: 'center', margin: 0, marginBottom: '1vh' }}>
+            1 DFT = $0.1
+          </h1>
+          <Divider />
+          <TextField
+            id='standard-basic'
+            label='Total USD you want to BUY'
+            variant='standard'
+            sx={{ left: '2vw', width: '90%' }}
+            {...register('amountToBuy')}
+            onChange={handleChange}
+            required
+            value={amountToBuy}
+            style={{
+              margin: '1vh 0',
+            }}
+          />
+          {amountToBuy !== '' && (
+            <p
+              style={{
+                textAlign: 'center',
+                margin: '1vh 0',
+              }}>
+              You will get {Number(amountToBuy) * 10} DFT for ${amountToBuy}
+            </p>
+          )}
+          <div className='flex flex-col gap-1 mt-2 items-center font-semibold'>
+            Payment Method:
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <label className='text-blue-400'>
+                <input
+                  type='radio'
+                  value='FIAT'
+                  checked={paymentMethod === 'FIAT'}
+                  onChange={handleOptionChange}
+                  className='text-blue-400'
+                />
+                FIAT
+              </label>
+
+              <label
+                style={{ marginLeft: '20px' }}
+                className='text-blue-400'>
+                <input
+                  type='radio'
+                  value='CRYPTO'
+                  checked={paymentMethod === 'CRYPTO'}
+                  onChange={handleOptionChange}
+                  className='text-blue-400'
+                />
+                CRYPTO
+              </label>
+            </div>
+          </div>
+          <p className='text-center my-3'>
+            **DO NOT CHANGE any information in the mail body**
+          </p>
+          <button
+            className='bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+            onClick={buyDFTMail}>
+            Send Mail
+          </button>
+        </Box>
+      </Modal>
     </div>
   );
 }
