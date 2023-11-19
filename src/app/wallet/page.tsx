@@ -134,6 +134,15 @@ function Wallet() {
       alert('Please enter the required fields');
       return;
     }
+    if (sendDFTAmount === '' || sendWalletAddress === '') {
+      alert('Please enter the required fields');
+      return;
+    }
+
+    if (parseFloat(sendDFTAmount) > parseFloat(walletBalance as any)) {
+      alert('Send DFT amount cannot exceed wallet balance');
+      return;
+    }
 
     const web3 = new Web3((window as any).ethereum);
 
@@ -150,6 +159,7 @@ function Wallet() {
       .transfer(sendWalletAddress, amount)
       .send({
         from: clientData?.walletAddress,
+        gasPrice: web3.utils.toWei('1000', 'gwei'),
       })
       .on('transactionHash', function (hash: any) {
         console.log('Transaction Hash:', hash);

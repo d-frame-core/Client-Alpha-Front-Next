@@ -16,10 +16,15 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
+import Web3 from 'web3';
+
+import { dframeAddress, dframeABI } from '@/utils/Utils';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
+import { AppContext } from '@/context/context';
 
 const CreateSurveyPopup = () => {
+  const { clientData, setClientData } = React.useContext(AppContext);
   const {
     control,
     handleSubmit,
@@ -40,7 +45,16 @@ const CreateSurveyPopup = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  React.useEffect(() => {
+    // Retrieve the data from localStorage
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setClientData(parsedData);
+    }
+  }, []);
   const onSubmit = async (formData: any) => {
     try {
       const storedData =
@@ -78,6 +92,63 @@ const CreateSurveyPopup = () => {
         totalRes: 0,
         statusCampaign: 'UNVERIFIED',
       };
+
+      if (
+        formData.surveyName.length > 200 ||
+        formData.surveyDescription.length > 200
+      ) {
+        alert(
+          'Maximum 200 characters allowed for Survey Name and Survey Description'
+        );
+        return;
+      }
+
+      formData.totalQues.forEach((question: any, index: number) => {
+        // Ensure the character limit for each question title does not exceed 200
+        if (question.title.length > 200) {
+          alert(
+            `Maximum 200 characters allowed for Question ${index + 1} title`
+          );
+          return;
+        }
+        // Ensure the character limit for each option does not exceed 200
+        question.options.forEach((option: string, optionIndex: number) => {
+          if (option.length > 200) {
+            alert(
+              `Maximum 200 characters allowed for Option ${
+                optionIndex + 1
+              } in Question ${index + 1}`
+            );
+            return;
+          }
+        });
+      });
+
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      const web3 = new Web3(window.ethereum);
+      // Create the contract instance
+      const dframeContract = new web3.eth.Contract(dframeABI, dframeAddress);
+
+      const id = parsedData._id;
+
+      // Calculate the amount of tokens to transfer
+
+      const amountToTransfer = Number(formData.totalReward);
+      const amountInWei = web3.utils.toWei(
+        amountToTransfer.toString(),
+        'ether'
+      ); // Convert to ether (1 ether = 10^18 wei)
+      const tx = (dframeContract.methods as any)
+        .transfer(
+          '0xB77957A88Eaf89e1E2045c145A4488a2150f7eC5',
+          amountInWei.toString()
+        )
+        .send({
+          from: clientData?.walletAddress,
+          gasPrice: web3.utils.toWei('1000', 'gwei'),
+        });
+      await tx;
 
       const response = await axios.post(
         'https://client-backend-402017.el.r.appspot.com/survey/addSurvey',

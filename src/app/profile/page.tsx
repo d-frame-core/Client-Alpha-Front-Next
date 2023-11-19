@@ -33,7 +33,7 @@ function Profile() {
   const [data, setData] = useState<CompanyData>();
   const [copied, setCopied] = useState(false);
 
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control, getValues } = useForm();
   const [showEditForm, setShowEditForm] = useState(false);
 
   const onSubmit = (formData: any) => {
@@ -118,6 +118,8 @@ function Profile() {
     const data = response.data.user;
     typeof window !== 'undefined' &&
       window.localStorage.setItem('dframeClientData', JSON.stringify(data));
+
+    window.location.reload();
   }
 
   function copyAddress() {
@@ -160,6 +162,65 @@ function Profile() {
         console.log(error);
       });
   };
+
+  async function editUserFunction() {
+    const storedData = window.localStorage.getItem('dframeClientData');
+    const parsedData = JSON.parse(storedData as any);
+
+    const formData = new FormData(); // Create a new FormData object
+
+    const updatedData = {
+      ...parsedData,
+      companyName: getValues('companyName'), // Use getValues from react-hook-form
+      companyEmail: getValues('companyEmail'),
+      companyType: getValues('companyType'),
+      companyAddress1: getValues('companyAddress1'),
+      companyAddress2: getValues('companyAddress2'),
+      // Add all fields from your form here...
+    };
+
+    // Log the updatedData to check if it contains the expected form field values
+    console.log('Updated Data:', updatedData);
+
+    if (
+      updatedData.companyName.length > 200 ||
+      updatedData.companyEmail.length > 200 ||
+      updatedData.companyType.length > 200 ||
+      updatedData.companyAddress1.length > 200 ||
+      updatedData.companyAddress2.length > 200
+      // Add checks for other fields as needed...
+    ) {
+      alert('Maximum 200 characters allowed for input fields');
+      return;
+    }
+
+    // Set formData based on updatedData
+    formData.append('companyName', updatedData.companyName);
+    formData.append('companyEmail', updatedData.companyEmail);
+    formData.append('companyType', updatedData.companyType);
+    formData.append('companyAddress1', updatedData.companyAddress1);
+    formData.append('companyAddress2', updatedData.companyAddress2);
+    // Append other fields to formData as needed...
+
+    const id = parsedData._id;
+
+    await fetch(`https://client-backend-402017.el.r.appspot.com/users/${id}`, {
+      // await fetch(`http://localhost:8080/users/${id}`, {
+      method: 'PATCH',
+      body: formData, // Use formData as the body for the request
+    })
+      .then(async (response) => {
+        console.log(response);
+        setShowEditForm(false);
+        await fetchUserData();
+        window.location.reload();
+      })
+      .catch((error) => {
+        alert('ERROR');
+        console.log(error);
+      });
+  }
+
   return (
     <div>
       <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
@@ -344,7 +405,7 @@ function Profile() {
                     <Button
                       variant='contained'
                       color='primary'
-                      onClick={() => setShowEditForm(false)}>
+                      onClick={editUserFunction}>
                       Save
                     </Button>
                   ) : (

@@ -12,8 +12,13 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
+import Web3 from 'web3';
+
+import { dframeAddress, dframeABI } from '@/utils/Utils';
+import { AppContext } from '@/context/context';
 
 const CreateSurveyPopup = () => {
+  const { clientData, setClientData } = React.useContext(AppContext);
   const [campaignName, setCampaignName] = useState<string>('');
   const [adImage, setAdImage] = useState<any>('');
   const [campaignType, setCampaignType] = useState<string>('Awareness');
@@ -69,6 +74,17 @@ const CreateSurveyPopup = () => {
     }
     // window.location.reload();
   };
+
+  React.useEffect(() => {
+    // Retrieve the data from localStorage
+    const storedData =
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('dframeClientData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setClientData(parsedData);
+    }
+  }, []);
   const removeTag = (indexToRemove: number) => {
     setAdTags(adTags.filter((_: any, index: any) => index !== indexToRemove));
   };
@@ -102,57 +118,107 @@ const CreateSurveyPopup = () => {
       setDateError('');
     }
   };
-  const handleBidAmount = (event: any) => {
+  const handleBidAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const amount = event.target.value;
-    setBidAmount(amount);
+    console.log(amount); // Log the current value being typed
 
-    if (amount < 1 || amount > 100) {
+    if ((amount as any) < 1 || (amount as any) > 100) {
       setBidAmountError('**Bid Amount should be between 1 and 100');
+      setBidAmount('');
     } else {
       setBidAmountError('');
+      setBidAmount(amount); // Set the bid amount in the state
     }
   };
 
   async function createNewCampaign() {
     setOpen(false);
-    const storedData = window.localStorage.getItem('dframeClientData');
-    const parsedData = JSON.parse(storedData as any);
+    if (
+      campaignName.length > 200 ||
+      campaignType.length > 200 ||
+      adName.length > 200 ||
+      adType.length > 200 ||
+      adStartDate.length > 200 ||
+      adLink.length > 200 ||
+      adContent.length > 200
+    ) {
+      alert('Maximum 200 characters allowed all fields');
+      // You can return or handle the error as needed in your code
+      return;
+    }
 
-    const id = parsedData._id;
-    const formData = new FormData();
-    formData.append('clientId', id);
-    formData.append('campaignName', campaignName);
-    formData.append('campaignType', campaignType);
-    formData.append('adName', adName);
-    formData.append('adType', adType);
-    formData.append('startDate', adStartDate);
-    formData.append('endDate', adEndDate);
-    formData.append('adUrl', adLink);
-    formData.append('adContent', adContent);
-    formData.append('tags', JSON.stringify(adTags));
-    formData.append('image', adImage);
-    formData.append('bidAmount', bidAmount); // Append the image file
-    formData.append('totalDays', totalDaysToRun); // Append the image file
-    formData.append('perDay', perDayBudget); // Append the image file
+    if (window.ethereum) {
+      const storedData =
+        typeof window !== 'undefined' &&
+        window.localStorage.getItem('dframeClientData');
+      const parsedData = JSON.parse(storedData as any);
+      const web3 = new Web3(window.ethereum);
+      // Check if MetaMask is installed and connected
+      try {
+        // Request account access if needed
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-    await fetch(
-      `https://client-backend-402017.el.r.appspot.com/ads/test/createAd`,
-      {
-        method: 'POST',
+        // Create the contract instance
+        const dframeContract = new web3.eth.Contract(dframeABI, dframeAddress);
 
-        body: formData,
+        const id = parsedData._id;
+
+        // Calculate the amount of tokens to transfer
+
+        const amountToTransfer = Number(perDayBudget) * totalDaysToRun;
+        const amountInWei = web3.utils.toWei(
+          amountToTransfer.toString(),
+          'ether'
+        ); // Convert to ether (1 ether = 10^18 wei)
+        const tx = (dframeContract.methods as any)
+          .transfer(
+            '0xB77957A88Eaf89e1E2045c145A4488a2150f7eC5',
+            amountInWei.toString()
+          )
+          .send({
+            from: clientData?.walletAddress,
+            gasPrice: web3.utils.toWei('1000', 'gwei'),
+          });
+        await tx;
+
+        const formData = new FormData();
+        formData.append('clientId', id);
+        formData.append('campaignName', campaignName);
+        formData.append('campaignType', campaignType);
+        formData.append('adName', adName);
+        formData.append('adType', adType);
+        formData.append('startDate', adStartDate);
+        formData.append('endDate', adEndDate);
+        formData.append('adUrl', adLink);
+        formData.append('adContent', adContent);
+        formData.append('tags', JSON.stringify(adTags));
+        formData.append('image', adImage);
+        formData.append('bidAmount', bidAmount); // Append the image file
+        formData.append('totalDays', totalDaysToRun); // Append the image file
+        formData.append('perDay', perDayBudget); // Append the image file
+
+        await fetch(
+          `https://client-backend-402017.el.r.appspot.com/ads/test/createAd`,
+          {
+            method: 'POST',
+
+            body: formData,
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            setTimeout(() => {
+              setOpen(false);
+
+              window.location.reload();
+            }, 1000);
+          })
+          .catch((error) => console.log(error));
+      } catch (error) {
+        console.log('Error transferring the tokens', error);
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setTimeout(() => {
-          setOpen(false);
-
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((error) => console.log(error));
+    }
   }
   return (
     <div>

@@ -124,6 +124,10 @@ function Profile() {
   }
 
   async function editAdFunction() {
+    if (adName.length > 200 || adContent.length > 200) {
+      alert('Maximum 200 characters allowed for adName and adContent');
+      return;
+    }
     await fetch(
       `https://client-backend-402017.el.r.appspot.com/ads/${singleDetails._id}`,
       {
