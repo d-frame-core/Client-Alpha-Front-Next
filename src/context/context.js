@@ -10,6 +10,7 @@ function AppContextProvider(props) {
   const [clientData, setClientData] = useState(null);
   const [clientToken, setClientToken] = useState('');
   const [clientId, setClientId] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <AppContext.Provider
@@ -27,6 +28,8 @@ function AppContextProvider(props) {
         setClientData,
         setClientToken,
         setClientId,
+        isOpen,
+        setIsOpen,
       }}>
       {props.children}
     </AppContext.Provider>

@@ -9,6 +9,8 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import PollIcon from '@mui/icons-material/Poll';
 import SettingsIcon from '@mui/icons-material/Settings';
+import Dex from '@/app/dex/page';
+import { CurrencyExchange } from '@mui/icons-material';
 interface TabOptionInterface {
   name: string;
   icon: JSX.Element;
@@ -44,6 +46,11 @@ const tabOptions: TabOptionInterface[] = [
     name: 'Setting',
     icon: <SettingsIcon />,
     link: '/setting',
+  },
+  {
+    name: 'Dex',
+    icon: <CurrencyExchange />,
+    link: '/dex',
   },
 ];
 function Sidebar() {

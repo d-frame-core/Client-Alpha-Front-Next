@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AppContextProvider } from '@/context/context';
+import Middleware from '@/components/middleware/Middleware';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <AppContextProvider>{children}</AppContextProvider>
+        <AppContextProvider>
+          <Middleware />
+          {children}
+        </AppContextProvider>
       </body>
     </html>
   );
