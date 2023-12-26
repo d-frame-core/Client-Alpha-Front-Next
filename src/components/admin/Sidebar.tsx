@@ -59,9 +59,11 @@ const Sidebar = () => {
                 href={'/admin/user-kyc'}>
                 <ContactMail /> <span className='ml-2'>User KYC</span>
               </Link>
-              <div className='flex items-center mb-2'>
-                <Assessment /> <span className='ml-2'>User Analytics</span>
-              </div>
+              <Link
+                href={'/admin/user-website'}
+                className='flex items-center mb-2'>
+                <Assessment /> <span className='ml-2'>User Site</span>
+              </Link>
               <Link
                 className='flex items-center mb-2'
                 href={'/admin/user-dex'}>

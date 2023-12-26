@@ -3,9 +3,8 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import withSidebarAndHeader from '../../components/hoc/higherOrderComponent';
-import { dframeABI, dframeAddress } from '../../utils/Utils';
-import Web3 from 'web3';
 import { AppContext } from '@/context/context';
+import { Cancel } from '@mui/icons-material';
 function Wallet() {
   interface CompanyData {
     companyAddress1: string;
@@ -14,35 +13,18 @@ function Wallet() {
     companyName: string;
     companyType: string;
     status: string;
-    tags: string[]; // If tags are always an array of strings
+    tags: string[];
     walletAddress: string;
     __v: number;
     _id: string;
   }
   const [data, setData] = useState<CompanyData>();
-  const [buyDFTModal, setBuyDFTModal] = useState(false);
-  const [amountToBuy, setAmountToBuy] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [pastTransactions, setPastTransactions] = useState<any[] | never[]>([]);
-  const [sendWalletAddress, setSendWalletAddress] = useState<any>('');
   const { clientData, setClientData } = useContext(AppContext);
-  const [sendDFTAmount, setSendDFTAmount] = useState<any>('');
+  const [activeData, setActiveData] = useState(null);
+  const [historyData, setHistoryData] = useState(null);
+  const [activeBid, setActiveBid] = useState(null);
+
   const [toggleMenu, setToggleMenu] = useState('active');
-
-  const [walletBalance, setWalletBalance] = useState<String>('');
-
-  const handleChange = (e: any) => {
-    const value = e.target.value;
-    // check the if statement that the value is ONLY between 0-9, no decimals, no spaces, nothing EXCEPT 0-9
-
-    if (value.match(/^[0-9]*$/gm)) {
-      setAmountToBuy(value);
-    } else {
-      // throw alert of invalid input
-      alert('Invalid input');
-      setAmountToBuy('');
-    }
-  };
   async function fetchDataBackend() {
     await fetch('http://localhost:8080/transaction/pending', {
       method: 'GET',
@@ -51,26 +33,51 @@ function Wallet() {
       .then((response) => response.json())
       .then((data) => {
         // setData(data);
-        // console.log(data);
+        setActiveData(data);
+        console.log(data);
       })
       .catch((error) => console.log(error));
   }
 
   async function fetchHistory() {
-    await fetch(`http://localhost:8080/transaction/client/${data?._id}`, {
-      method: 'GET',
-      cache: 'no-cache',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // setData(data);
-        console.log('history is', data);
+    if (data) {
+      await fetch(
+        `http://localhost:8080/transaction/client-history/${data._id}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // setData(data);
+          console.log('history is', data);
+          setHistoryData(data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }
+
+  async function fetchClientactiveBid() {
+    if (data) {
+      console.log(data._id);
+      await fetch(`http://localhost:8080/transaction/active/${data._id}`, {
+        method: 'GET',
+        cache: 'no-cache',
       })
-      .catch((error) => console.log(error));
+        .then((response) => response.json())
+        .then((data) => {
+          // setData(data);
+          console.log('active bids is', data);
+          setActiveBid(data);
+        })
+        .catch((error) => console.log(error));
+    }
   }
   useEffect(() => {
     fetchDataBackend();
     fetchHistory();
+    fetchClientactiveBid();
   }, [data, clientData]);
 
   useEffect(() => {
@@ -85,92 +92,93 @@ function Wallet() {
     }
   }, []);
 
-  console.log('cliend data', clientData);
-  async function sendDFTFunction() {
-    if (sendDFTAmount === '' || sendWalletAddress === '') {
-      alert('Please enter the required fields');
-      return;
+  async function handleStatusChange(id: any) {
+    console.log('transaction id is', id);
+    if (data) {
+      await fetch(
+        `http://localhost:8080/transaction/transaction/update/${data._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            transactionId: id,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // setData(data);
+          console.log('active bids is', data);
+          fetchDataBackend();
+          fetchHistory();
+          fetchClientactiveBid();
+        })
+        .catch((error) => console.log(error));
     }
-    if (sendDFTAmount === '' || sendWalletAddress === '') {
-      alert('Please enter the required fields');
-      return;
-    }
-
-    if (parseFloat(sendDFTAmount) > parseFloat(walletBalance as any)) {
-      alert('Send DFT amount cannot exceed wallet balance');
-      return;
-    }
-
-    const web3 = new Web3((window as any).ethereum);
-
-    // set the contract address of the DFRAME token
-
-    // get the DFRAME token contract instance
-    const dframeContract = new web3.eth.Contract(
-      dframeABI as any,
-      dframeAddress
-    );
-    const amount = web3.utils.toWei(sendDFTAmount.toString(), 'ether');
-
-    const tx = (dframeContract.methods as any)
-      .transfer(sendWalletAddress, amount)
-      .send({
-        from: clientData?.walletAddress,
-        gasPrice: web3.utils.toWei('1000', 'gwei'),
-      })
-      .on('transactionHash', function (hash: any) {
-        console.log('Transaction Hash:', hash);
-      })
-      .on('receipt', function (receipt: any) {
-        console.log('Transaction Receipt:', receipt);
-      })
-      .on('confirmation', function (confirmationNumber: any, receipt: any) {
-        console.log('Confirmation Number:', confirmationNumber);
-        console.log('Transaction Receipt:', receipt);
-      })
-      .on('error', function (error: any) {
-        console.log('Error:', error);
-        alert('Error: ' + error.message);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      });
-
-    // wait for the tx on metamask to be completed then recall the getBalance function to update the balance and getpastevents function
-    await tx;
-
-    setTimeout(() => {
-      setSendWalletAddress('');
-      setSendDFTAmount('');
-    }, 1000);
   }
 
-  const handleOptionChange = (e: any) => {
-    setPaymentMethod(e.target.value);
-  };
+  async function handleCancelBid(id: any) {
+    if (data) {
+      await fetch(`http://localhost:8080/transaction/cancel/${data._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transactionId: id,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // setData(data);
+          console.log('cancelled bid is', data);
+          fetchDataBackend();
+          fetchHistory();
+          fetchClientactiveBid();
+        })
+        .catch((error) => console.log(error));
+    }
+  }
 
-  const style2 = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 470,
-    height: 300,
-    bgcolor: 'white',
-    boxShadow: 24,
-    border: '0',
-    p: 3,
-    borderRadius: '1.1vh',
-    overflow: 'hidden',
-    color: 'black',
-  };
   return (
     <div>
       <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 h-[85vh] overflow-auto'>
         <div className='flex justify-between mb-8 mt-3'>
           <p className='text-[28px]'>p2p DFT Exchange</p>
+          {activeBid && (
+            <div className='bg-white px-4 mr-6 py-2 rounded'>
+              <div className='text-center font-semibold text-xl'>
+                Your Active Bid:{' '}
+              </div>
+
+              <div className='flex gap-4'>
+                <div>
+                  <span className='font-semibold'>Amount: </span>
+                  {(activeBid as any).amount} DFT
+                </div>
+                <div>
+                  <span className='font-semibold'> From: </span>
+                  {(activeBid as any).from.slice(0, 4)}....
+                  {(activeBid as any).from.slice(-4)}
+                </div>
+              </div>
+              <div className='flex gap-4 items-center mt-2'>
+                <div>
+                  <span className='font-semibold'>Created At: </span>
+                  {(activeBid as any).createdAt.slice(0, 10)}
+                </div>
+                <button
+                  className=' text-red-500 -mt-1'
+                  onClick={() => handleCancelBid((activeBid as any)._id)}>
+                  Cancel <Cancel />{' '}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-        <div className='flex flex-col p-3 rounded-lg w-11/12 mx-auto mt-16 bg-white h-[33rem] overflow-y-auto justify-start gap-6 items-center'>
+        <div className='flex flex-col p-3 rounded-lg w-11/12 mx-auto mt-16 bg-white h-[33rem] justify-start gap-6 items-center'>
           <div className='text-2xl font-semibold mt-4'>DFT Listings</div>
           <div className='flex h-14 items-center justify-center text-xl w-full'>
             <div
@@ -191,6 +199,54 @@ function Wallet() {
               onClick={() => setToggleMenu('history')}>
               History
             </div>
+          </div>
+          <div className='h-80 border border-red-900 overflow-y-auto w-3/4 mx-auto'>
+            {toggleMenu === 'active' ? (
+              <div className='flex text-xl justify-center'>
+                {activeData && (activeData as any).length > 0 ? (
+                  (activeData as any).map((item: any) => (
+                    <div
+                      key={item._id}
+                      className='flex items-center justify-center my-4 text-xl gap-12 font-semibold'>
+                      <p className='text-blue-500'>
+                        {`${item.from} listed ${item.amount} DFT on ${new Date(
+                          item.createdAt
+                        ).toLocaleDateString()}`}
+                      </p>
+                      <button
+                        className=' bg-black text-white px-4 py-1 rounded-lg text-sm'
+                        onClick={() => handleStatusChange(item._id)}>
+                        I am Interested
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className='flex justify-center items-center mt-32'>
+                    <p className='text-2xl font-semibold'>NO Active Listings</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className='flex text-xl justify-center'>
+                {historyData && (historyData as any).length > 0 ? (
+                  (historyData as any).map((item: any) => (
+                    <div
+                      key={item._id}
+                      className='flex items-center my-4 text-xl gap-14 font-semibold'>
+                      <p className='text-blue-500'>
+                        {`You bought ${item.amount} DFT from ${
+                          item.from
+                        } on ${new Date(item.updatedAt).toLocaleDateString()}`}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <div className='flex justify-center items-center mt-32'>
+                    <p className='text-2xl font-semibold'>NO HISTORY</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
