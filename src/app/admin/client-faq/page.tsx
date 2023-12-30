@@ -4,7 +4,7 @@ import Modal from '@/components/admin/AddModal';
 import AdminTableComponent from '@/components/admin/AdminTable';
 import React, { useEffect, useState } from 'react';
 
-export default function adminFAQ() {
+export default function AdminFaqClient() {
   const [data, setData] = useState();
   const [showModal, setShowModal] = useState(false);
   async function fetchData() {
