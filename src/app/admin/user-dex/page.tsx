@@ -9,10 +9,13 @@ export default function UserDex() {
   const [detail, setDetail] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState('');
   async function fetchDataBackend() {
-    await fetch('http://localhost:8080/transaction/transactions', {
-      method: 'GET',
-      cache: 'no-cache',
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com//transaction/transactions',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setData(data);
@@ -25,9 +28,12 @@ export default function UserDex() {
   }, []);
 
   async function handleDeleteFunction(id: string) {
-    await fetch(`http://localhost:8080/transaction/transactions/${id}`, {
-      method: 'DELETE',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//transaction/transactions/${id}`,
+      {
+        method: 'DELETE',
+      }
+    )
       .then((response) => {
         console.log(response);
         fetchDataBackend();

@@ -22,17 +22,20 @@ const Register = () => {
     });
     const walletAddress = accounts[0];
 
-    await fetch('http://localhost:8080/users/signup', {
-      method: 'POST',
-      body: JSON.stringify({
-        companyName: companyName,
-        companyType: companyType,
-        companyEmail: companyEmail,
-        companyAddress1: companyAddress1,
-        companyAddress2: companyAddress2,
-        walletAddress: walletAddress,
-      }),
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com//users/signup',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          companyName: companyName,
+          companyType: companyType,
+          companyEmail: companyEmail,
+          companyAddress1: companyAddress1,
+          companyAddress2: companyAddress2,
+          walletAddress: walletAddress,
+        }),
+      }
+    )
       .then((response) => {
         console.log(response);
 

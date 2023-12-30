@@ -8,10 +8,13 @@ export default function UserDex() {
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState(null);
   async function fetchDataBackend() {
-    await fetch('http://localhost:8080/websites/admin/get-500-sites', {
-      method: 'GET',
-      cache: 'no-cache',
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com//websites/admin/get-500-sites',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setData(data);
@@ -23,16 +26,19 @@ export default function UserDex() {
     fetchDataBackend();
   }, []);
 
-  async function addTags(id: string, tags: string[]) {
-    await fetch(`http://localhost:8080/websites/admin/addTags/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        newTags: tags,
-      }),
-    })
+  async function addTags(id: string, tag: string) {
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//websites/admin/addTags/${id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          newTag: tag,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

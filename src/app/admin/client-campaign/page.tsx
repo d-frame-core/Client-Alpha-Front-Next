@@ -32,9 +32,12 @@ export default function ClientCampaign() {
   }, []);
 
   const verifyCampaign = async (id: string) => {
-    await fetch(`http://localhost:8080/ads/admin/verifyAd/${id}`, {
-      method: 'PATCH',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//ads/admin/verifyAd/${id}`,
+      {
+        method: 'PATCH',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -46,9 +49,12 @@ export default function ClientCampaign() {
   };
 
   const stopCampaign = async (id: string) => {
-    await fetch(`http://localhost:8080/ads/admin/pauseAd/${id}`, {
-      method: 'PATCH',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//ads/admin/pauseAd/${id}`,
+      {
+        method: 'PATCH',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -60,7 +66,7 @@ export default function ClientCampaign() {
   };
 
   const deleteCampaign = async (id: string) => {
-    await fetch(`http://localhost:8080/ads/${id}`, {
+    await fetch(`https://client-backend-402017.el.r.appspot.com//ads/${id}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())

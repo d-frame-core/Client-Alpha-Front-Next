@@ -8,10 +8,13 @@ export default function UserRewards() {
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState(null);
   async function fetchDataBackend() {
-    await fetch('http://localhost:8080/rewards/rewardRequests/getAll', {
-      method: 'GET',
-      cache: 'no-cache',
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com//rewards/rewardRequests/getAll',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setData(data);
@@ -23,16 +26,27 @@ export default function UserRewards() {
     fetchDataBackend();
   }, []);
 
-  async function completeTransaction(address: string) {
-    await fetch(`http://localhost:8080/dframeUser/admin/reward`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        walletAddress: address,
-      }),
-    })
+  async function completeTransaction(
+    address: string,
+    key: string,
+    amount: string,
+    rewardId: string
+  ) {
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//dframeUser/admin/reward`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          walletAddress: address,
+          amountToTransfer: amount,
+          privateKey: key,
+          rewardId: rewardId,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

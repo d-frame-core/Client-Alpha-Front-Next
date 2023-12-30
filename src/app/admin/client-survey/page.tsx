@@ -31,9 +31,12 @@ export default function ClientSurvey() {
     fetchData();
   }, []);
   const verifySurvey = async (id: string) => {
-    await fetch(`http://localhost:8080/survey/verifyStatus/${id}`, {
-      method: 'PATCH',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//survey/verifyStatus/${id}`,
+      {
+        method: 'PATCH',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -45,9 +48,12 @@ export default function ClientSurvey() {
   };
 
   const stopSurvey = async (id: string) => {
-    await fetch(`http://localhost:8080/survey/stopStatus/${id}`, {
-      method: 'PATCH',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//survey/stopStatus/${id}`,
+      {
+        method: 'PATCH',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -59,9 +65,12 @@ export default function ClientSurvey() {
   };
 
   const deleteSurvey = async (id: string) => {
-    await fetch(`http://localhost:8080/survey/deleteSurvey/${id}`, {
-      method: 'DELETE',
-    })
+    await fetch(
+      `https://client-backend-402017.el.r.appspot.com//survey/deleteSurvey/${id}`,
+      {
+        method: 'DELETE',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

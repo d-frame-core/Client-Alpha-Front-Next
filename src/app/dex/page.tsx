@@ -26,10 +26,13 @@ function Wallet() {
 
   const [toggleMenu, setToggleMenu] = useState('active');
   async function fetchDataBackend() {
-    await fetch('http://localhost:8080/transaction/pending', {
-      method: 'GET',
-      cache: 'no-cache',
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com//transaction/pending',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         // setData(data);
@@ -42,7 +45,7 @@ function Wallet() {
   async function fetchHistory() {
     if (data) {
       await fetch(
-        `http://localhost:8080/transaction/client-history/${data._id}`,
+        `https://client-backend-402017.el.r.appspot.com//transaction/client-history/${data._id}`,
         {
           method: 'GET',
           cache: 'no-cache',
@@ -61,10 +64,13 @@ function Wallet() {
   async function fetchClientactiveBid() {
     if (data) {
       console.log(data._id);
-      await fetch(`http://localhost:8080/transaction/active/${data._id}`, {
-        method: 'GET',
-        cache: 'no-cache',
-      })
+      await fetch(
+        `https://client-backend-402017.el.r.appspot.com//transaction/active/${data._id}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           // setData(data);
@@ -96,7 +102,7 @@ function Wallet() {
     console.log('transaction id is', id);
     if (data) {
       await fetch(
-        `http://localhost:8080/transaction/transaction/update/${data._id}`,
+        `https://client-backend-402017.el.r.appspot.com//transaction/transaction/update/${data._id}`,
         {
           method: 'PUT',
           headers: {
@@ -121,15 +127,18 @@ function Wallet() {
 
   async function handleCancelBid(id: any) {
     if (data) {
-      await fetch(`http://localhost:8080/transaction/cancel/${data._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          transactionId: id,
-        }),
-      })
+      await fetch(
+        `https://client-backend-402017.el.r.appspot.com//transaction/cancel/${data._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            transactionId: id,
+          }),
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           // setData(data);

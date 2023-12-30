@@ -26,9 +26,9 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`h-full absolute ${isOpen ? ' z-50' : ''} flex ${
-        isOpen ? 'w-60' : 'w-24'
-      } bg-gray-900 text-white h-screen`}>
+      className={`h-full overflow-y-auto absolute ${
+        isOpen ? ' z-50' : ''
+      } flex ${isOpen ? 'w-60' : 'w-24'} bg-gray-900 text-white h-screen`}>
       <div className='flex flex-col w-full'>
         <div
           onClick={toggleSidebar}
@@ -63,6 +63,11 @@ const Sidebar = () => {
                 href={'/admin/user-website'}
                 className='flex items-center mb-2'>
                 <Assessment /> <span className='ml-2'>User Site</span>
+              </Link>
+              <Link
+                href={'/admin/website-tags'}
+                className='flex items-center mb-2'>
+                <Assessment /> <span className='ml-2'>Website Tags</span>
               </Link>
               <Link
                 className='flex items-center mb-2'
