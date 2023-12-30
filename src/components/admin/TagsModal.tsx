@@ -33,9 +33,7 @@ const TagDetailsModal: React.FC<TagDetailsModalProps> = ({
           <div className='font-semibold'>Website IDs:</div>
           <div className='flex flex-col overflow-y-auto h-20 w-full items-center'>
             {detail?.websites.map((website: any, index: number) => (
-              <div>
-                <p key={index}>{website}</p>
-              </div>
+              <p key={index}>{website}</p>
             ))}
           </div>
         </div>
