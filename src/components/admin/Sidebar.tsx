@@ -13,6 +13,8 @@ import {
   MenuOpen,
   Quiz,
   CurrencyExchange,
+  Info,
+  TagSharp,
 } from '@mui/icons-material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,29 +48,33 @@ const Sidebar = () => {
         </div>
         <div className={`${isOpen ? 'flex-1' : 'hidden'}`}>
           <div className='flex flex-col'>
+            <div className='bg-black p-4 flex flex-col gap-2 cursor-pointer'>
+              <Link
+                className='flex items-center mb-2'
+                href={'/admin/info'}>
+                <Info /> <span className='ml-2'>D Frame Info</span>
+              </Link>
+              <Link
+                href={'/admin/website-tags'}
+                className='flex items-center mb-2'>
+                <TagSharp /> <span className='ml-2'>Add Tags to Site</span>
+              </Link>
+              <Link
+                href={'/admin/add-tags'}
+                className='flex items-center mb-2'>
+                <Assessment /> <span className='ml-2'>Add Tags</span>
+              </Link>
+            </div>
             <div className='flex items-center p-2 bg-blue-400'>
               <AccountCircle /> <span className='ml-2'>User</span>
             </div>
             <div className='bg-black p-4 flex flex-col gap-2 cursor-pointer'>
-              {/* User Section */}
-              <div className='flex items-center mb-2'>
-                <AssignmentInd /> <span className='ml-2'>User Info</span>
-              </div>
               <Link
                 className='flex items-center mb-2'
                 href={'/admin/user-kyc'}>
                 <ContactMail /> <span className='ml-2'>User KYC</span>
               </Link>
-              <Link
-                href={'/admin/user-website'}
-                className='flex items-center mb-2'>
-                <Assessment /> <span className='ml-2'>User Site</span>
-              </Link>
-              <Link
-                href={'/admin/website-tags'}
-                className='flex items-center mb-2'>
-                <Assessment /> <span className='ml-2'>Website Tags</span>
-              </Link>
+
               <Link
                 className='flex items-center mb-2'
                 href={'/admin/user-dex'}>
@@ -94,10 +100,6 @@ const Sidebar = () => {
               <Business /> <span className='ml-2'>Client</span>
             </div>
             <div className='bg-black p-4 flex flex-col gap-2 cursor-pointer'>
-              {/* Client Section */}
-              <div className='flex items-center mb-2 '>
-                <Assignment /> <span className='ml-2'>Client Info</span>
-              </div>
               <Link
                 href={'/admin/client-campaign'}
                 className='flex items-center mb-2'>
