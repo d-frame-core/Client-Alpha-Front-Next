@@ -13,43 +13,43 @@ const Register = () => {
   const [companyAddress1, setCompanyAddress1] = useState('');
   const [companyAddress2, setCompanyAddress2] = useState('');
   const [companyType, setCompanyType] = useState('');
-  const [companyPhoneNumber, setCompanyPhoneNumber] = useState('');
-  const [showModal, setShowModal] = useState(false);
-
-  async function handleSubmit(): Promise<void> {
+  const [signing, setSignin] = useState(false);
+  async function handleSubmit(e: any): Promise<void> {
+    e.preventDefault();
+    setSignin(true);
     const accounts: string[] = await (window as any).ethereum.request({
       method: 'eth_requestAccounts',
     });
     const walletAddress = accounts[0];
 
-    await fetch(
-      'https://client-backend-402017.el.r.appspot.com//users/signup',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          companyName: companyName,
-          companyType: companyType,
-          companyEmail: companyEmail,
-          companyAddress1: companyAddress1,
-          companyAddress2: companyAddress2,
-          walletAddress: walletAddress,
-        }),
-      }
-    )
-      .then((response) => {
-        console.log(response);
-
-        //  typeof window !== 'undefined' &&
-        //    window.localStorage.setItem('tokenForClient', response.data.token);
-        //  typeof window !== 'undefined' &&
-        //    window.localStorage.setItem('walletAddress', walletAddress);
-        //  const data = response.data.user;
-        //  typeof window !== 'undefined' &&
-        //    window.localStorage.setItem('dframeClientData', JSON.stringify(data));
-        //  router.push('/profile', { scroll: false });
-      })
+    await fetch('https://client-backend-402017.el.r.appspot.com/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        companyName: companyName,
+        companyType: companyType,
+        companyEmail: companyEmail,
+        companyAddress1: companyAddress1,
+        companyAddress2: companyAddress2,
+        walletAddress: walletAddress,
+      }),
+    })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        const user = data.user;
+
+        typeof window !== 'undefined' &&
+          window.localStorage.setItem('walletAddress', walletAddress);
+
+        typeof window !== 'undefined' &&
+          window.localStorage.setItem('dframeClientData', JSON.stringify(user));
+
+        setTimeout(() => {
+          setSignin(false);
+          router.push('/profile', { scroll: false });
+        }, 1000);
       })
       .catch((error) => console.log(error));
   }
@@ -142,18 +142,18 @@ const Register = () => {
               Verify
             </button> */}
           </div>
-          <button
-            className='bg-white rounded hover:bg-[#035ec5] hover:text-white outline-none glass shadow-2xl  w-full p-3    font-bold'
-            type='submit'
-            onClick={handleSubmit}>
-            Submit
-          </button>
-
-          {showModal && (
-            <Modal
-              onClose={() => setShowModal(false)}
-              phone={companyPhoneNumber}
-            />
+          {!signing && (
+            <button
+              className='bg-white rounded hover:bg-[#035ec5] hover:text-white outline-none glass shadow-2xl  w-full p-3    font-bold'
+              type='submit'
+              onClick={handleSubmit}>
+              Submit
+            </button>
+          )}
+          {signing && (
+            <div className='bg-white rounded hover:bg-[#035ec5] hover:text-white outline-none glass shadow-2xl  w-full p-3    font-bold'>
+              Creating Account.....
+            </div>
           )}
         </div>
       </form>

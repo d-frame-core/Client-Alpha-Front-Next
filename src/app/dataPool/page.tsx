@@ -23,128 +23,13 @@ interface CompanyData {
 function DataPool() {
   const { setClientData, clientData } = useContext(AppContext);
   const [data, setData] = useState<CompanyData>();
-  const [tagsData, setTagsData] = useState();
-  const [selectedTagData, setSelectedTagData] = useState<any>();
+  const [tagsData, setTagsData] = useState(null);
+  const [selectedTagData, setSelectedTagData] = useState<any>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>('Crypto');
 
-  const tags = [
-    'Crypto',
-    'Tech',
-    'Travel',
-    'Food',
-    'Sports',
-    'Fashion',
-    'Music',
-    // 'Health',
-    // 'Science',
-    // 'Gaming',
-  ];
   const ma = useMediaQuery('(min-width:880px)');
   var h: number = 240;
   var w: number = 650;
-  const generateRandomData = (tag: string, count: number) => {
-    const data = [];
-    const domainList = getDomainList(tag);
-
-    for (let i = 0; i < count; i++) {
-      const name = domainList[i % domainList.length];
-      const visits = Math.floor(Math.random() * 100) + 1; // Random visits between 1 and 100
-      data.push({ name, visits });
-    }
-    return data;
-  };
-
-  const getDomainList = (tag: string): string[] => {
-    switch (tag) {
-      case 'Crypto':
-        return [
-          'binance.com',
-          'mexc.com',
-          'kraken.com',
-          'bitfinex.com',
-          'gemini.com',
-        ];
-      case 'Tech':
-        return [
-          'techcrunch.com',
-          'wired.com',
-          'theverge.com',
-          'arstechnica.com',
-          'engadget.com',
-        ];
-      case 'Travel':
-        return [
-          'expedia.com',
-          'booking.com',
-          'airbnb.com',
-          'tripadvisor.com',
-          'kayak.com',
-        ];
-      case 'Food':
-        return [
-          'foodnetwork.com',
-          'allrecipes.com',
-          'epicurious.com',
-          'yummly.com',
-          'chowhound.com',
-        ];
-      case 'Sports':
-        return ['espn.com', 'nba.com', 'nfl.com', 'mlb.com', 'fifa.com'];
-      case 'Fashion':
-        return [
-          'vogue.com',
-          'elle.com',
-          'harpersbazaar.com',
-          'gq.com',
-          'fashionista.com',
-        ];
-      case 'Music':
-        return [
-          'spotify.com',
-          'applemusic.com',
-          'pandora.com',
-          'soundcloud.com',
-          'tidal.com',
-        ];
-      case 'Health':
-        return [
-          'webmd.com',
-          'mayoclinic.org',
-          'healthline.com',
-          'verywellhealth.com',
-          'cdc.gov',
-        ];
-      case 'Science':
-        return [
-          'sciencemag.org',
-          'nationalgeographic.com',
-          'scientificamerican.com',
-          'nature.com',
-          'sciencenews.org',
-        ];
-      case 'Gaming':
-        return [
-          'ign.com',
-          'gamespot.com',
-          'polygon.com',
-          'kotaku.com',
-          'eurogamer.net',
-        ];
-      default:
-        return [];
-    }
-  };
-
-  // Map tags to corresponding datasets
-  const datasets = tags.map((tag) => ({
-    tag,
-    data: generateRandomData(tag, 5),
-  }));
-
-  // Filter the selected dataset based on the selected tag
-  const selectedDataset = selectedTag
-    ? datasets.find((dataset) => dataset.tag === selectedTag)?.data || []
-    : [];
 
   const handleTagClick = (tag: any) => {
     console.log(tag);
@@ -174,13 +59,21 @@ function DataPool() {
     )
       .then((response) => response.json())
       .then((data) => {
-        setTagsData(data);
-        setSelectedTagData(data[0].websites);
+        console.log(data);
+        if (data.length > 0) {
+          setTagsData(data);
+          setSelectedTagData(data[0].websites);
+        }
       })
       .catch((error) => console.log(error));
   }
   return (
     <div>
+      {!tagsData && !selectedTagData && (
+        <div className='text-black flex justify-center items-center m-auto h-[94vh] text-3xl'>
+          **No Data Available**
+        </div>
+      )}
       <div className='flex overflow-x-auto bg-blue-300'>
         {tagsData &&
           (tagsData as any).map((tag: any) => (
@@ -221,7 +114,6 @@ function DataPool() {
               </div>
             )}
           </div>
-          {/* Additional content */}
         </div>
       )}
     </div>

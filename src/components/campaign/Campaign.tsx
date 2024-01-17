@@ -9,6 +9,9 @@ import {
   TextField,
   Button,
   Divider,
+  Select,
+  MenuItem,
+  Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
@@ -23,11 +26,10 @@ const CreateSurveyPopup = () => {
   const [adImage, setAdImage] = useState<any>('');
   const [campaignType, setCampaignType] = useState<string>('Awareness');
   const [adName, setAdName] = useState<string>('');
-  const [adFile, setAdFile] = useState<string | Blob>('');
-  // const [adVideo, setAdVideo] = useState<string>("");
   const [adContent, setAdContent] = useState<string>('');
   const [adLink, setAdLink] = useState<string>('');
-  const [adTags, setAdTags] = useState<any>([]);
+  const [adTags, setAdTags] = useState<any>(null);
+  const [adTag, setAdTag] = useState<any>();
   const [adLocation, setAdLocation] = useState<string>('');
   const [adStartDate, setAdStartDate] = useState('');
   const [adEndDate, setAdEndDate] = useState('');
@@ -75,8 +77,26 @@ const CreateSurveyPopup = () => {
     // window.location.reload();
   };
 
+  async function fetchTags() {
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com/tags/admin/getAll',
+      {
+        method: 'GET',
+        cache: 'force-cache',
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Tags fetched from backend are', data);
+        setAdTags(data);
+      })
+      .catch((error) => {
+        console.log(`Error in fetching tags, error is : `, error);
+      });
+  }
   React.useEffect(() => {
     // Retrieve the data from localStorage
+    fetchTags();
     const storedData =
       typeof window !== 'undefined' &&
       window.localStorage.getItem('dframeClientData');
@@ -180,7 +200,7 @@ const CreateSurveyPopup = () => {
             gasPrice: web3.utils.toWei('1000', 'gwei'),
           });
         await tx;
-
+        alert('Transaction Successful');
         const formData = new FormData();
         formData.append('clientId', id);
         formData.append('campaignName', campaignName);
@@ -191,7 +211,7 @@ const CreateSurveyPopup = () => {
         formData.append('endDate', adEndDate);
         formData.append('adUrl', adLink);
         formData.append('adContent', adContent);
-        formData.append('tags', JSON.stringify(adTags));
+        formData.append('tags', adTag);
         formData.append('image', adImage);
         formData.append('bidAmount', bidAmount); // Append the image file
         formData.append('totalDays', totalDaysToRun); // Append the image file
@@ -208,6 +228,7 @@ const CreateSurveyPopup = () => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
+            alert(' Campaign Created');
             setTimeout(() => {
               setOpen(false);
 
@@ -224,14 +245,14 @@ const CreateSurveyPopup = () => {
     <div>
       <Button
         variant='contained'
-        className='mr-8 text-[24px]'
+        className='mr-8 text-xl bg-blue-900'
         onClick={handleClickOpen}>
         <AddIcon className='mr-2' /> Create Ad
       </Button>
       <Dialog
         open={open}
         onClose={handleClose}>
-        <DialogTitle>Create Survey</DialogTitle>
+        <DialogTitle>Create Ad</DialogTitle>
         <DialogContent>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -409,18 +430,7 @@ const CreateSurveyPopup = () => {
             )}
             {step == 2 && (
               <div className='campaignsFormBody'>
-                <div className={`flex gap-3 flex-wrap w-11/12 mx-auto`}>
-                  {adTags.map((tag: any, index: any) => (
-                    <div
-                      key={index}
-                      className='tagAddedDiv'>
-                      <span>{tag}</span>
-                      <button onClick={() => removeTag(index)}>&#10006;</button>
-                    </div>
-                  ))}
-                </div>
-
-                <TextField
+                {/* <TextField
                   id='standard-basic'
                   label='Ad Tags'
                   variant='standard'
@@ -442,7 +452,24 @@ const CreateSurveyPopup = () => {
                     }
                   }}
                   required
-                />
+                /> */}
+                <div>
+                  <span className='ml-8'>Select Ad Tags:</span>
+                  <Select
+                    id='ad-tag-select'
+                    value={adTag}
+                    onChange={(e: any) => setAdTag(e.target.value)}
+                    sx={{ left: '2vw', width: '90%', marginTop: '1.5vh' }}
+                    required>
+                    {adTags.map((tag: any) => (
+                      <MenuItem
+                        key={tag._id}
+                        value={tag.name}>
+                        {tag.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
 
                 <TextField
                   id='standard-basic'
@@ -456,7 +483,6 @@ const CreateSurveyPopup = () => {
                   id='start-date'
                   variant='standard'
                   label='Start Date'
-                  placeholder='Start Date'
                   type='date'
                   sx={{ left: '2vw', width: '90%', marginTop: '1.5vh' }}
                   value={startDateDisplay}
@@ -522,6 +548,7 @@ const CreateSurveyPopup = () => {
                 <Button
                   variant='contained'
                   color='primary'
+                  className='bg-sky-600'
                   onClick={handleStepUp}>
                   Next
                 </Button>
@@ -532,6 +559,7 @@ const CreateSurveyPopup = () => {
                 type='submit'
                 variant='contained'
                 color='primary'
+                className='bg-sky-600'
                 onClick={createNewCampaign}>
                 Create
               </Button>

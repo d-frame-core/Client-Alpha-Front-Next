@@ -33,7 +33,7 @@ export default function ClientCampaign() {
 
   const verifyCampaign = async (id: string) => {
     await fetch(
-      `https://client-backend-402017.el.r.appspot.com//ads/admin/verifyAd/${id}`,
+      `https://client-backend-402017.el.r.appspot.com/ads/admin/verifyAd/${id}`,
       {
         method: 'PATCH',
       }
@@ -41,6 +41,7 @@ export default function ClientCampaign() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert('Verified Campaign');
         fetchData();
       })
       .catch((err) => {
@@ -50,7 +51,7 @@ export default function ClientCampaign() {
 
   const stopCampaign = async (id: string) => {
     await fetch(
-      `https://client-backend-402017.el.r.appspot.com//ads/admin/pauseAd/${id}`,
+      `https://client-backend-402017.el.r.appspot.com/ads/admin/pauseAd/${id}`,
       {
         method: 'PATCH',
       }
@@ -58,6 +59,7 @@ export default function ClientCampaign() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert('Stopped Campaign');
         fetchData();
       })
       .catch((err) => {
@@ -66,12 +68,13 @@ export default function ClientCampaign() {
   };
 
   const deleteCampaign = async (id: string) => {
-    await fetch(`https://client-backend-402017.el.r.appspot.com//ads/${id}`, {
+    await fetch(`https://client-backend-402017.el.r.appspot.com/ads/${id}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert('Deleted Campaign');
         fetchData();
       })
       .catch((err) => {

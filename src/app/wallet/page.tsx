@@ -69,6 +69,7 @@ function Wallet() {
       .catch((error) => console.log('error fetching waller', error));
   }
   function copyWalletAddress() {
+    alert('Copied Wallet Address');
     navigator.clipboard.writeText((data as any).walletAddress);
   }
 
@@ -226,7 +227,7 @@ function Wallet() {
               Transactions
             </div>
             {pastTransactions && pastTransactions.length > 0 ? (
-              <div className='border-b-2 border-gray-200 w-full text-lg text-center overflow-y-auto md:h-80 md:max-h-80 h-96 max-h-96'>
+              <div className='border-b-2 border-gray-200 w-full text-lg text-center overflow-y-auto md:h-[22rem] md:max-h-[22rem] h-96 max-h-96'>
                 {pastTransactions.map((event: any) => {
                   if (
                     event.returnValues.from.toString().toLowerCase() ===
@@ -274,19 +275,19 @@ function Wallet() {
                 />
               </div>
             </div>
-            <div className='bg-white w-full text-center rounded-lg flex-col py-3 md:text-sm text-xl'>
-              <div className='md:text-xl text-3xl pb-2 border-b-2 border-gray-300 text-center w-full font-semibold'>
+            <div className='bg-white w-full text-center rounded-lg  md:text-sm text-xl h-72 flex flex-col gap-3'>
+              <div className='md:text-xl text-3xl py-2 border-b-2 border-gray-300 text-center w-full font-semibold'>
                 Transfer Tokens
               </div>
-              <div className='md:my-2 my-4 '>
-                Wallet Address :
+              <div className='md:my-2 my-4 flex flex-col '>
+                <div>Wallet Address :</div>
                 <input
                   className='border-none w-4/5 bg-blue-200 rounded outline-none mx-auto p-1 pl-3 mt-2 shadow-lg'
                   onChange={(e) => setSendWalletAddress(e.target.value)}
                 />
               </div>
-              <div className='md:my-2 my-4 '>
-                DFT Amount :
+              <div className='md:my-2 my-4 flex flex-col '>
+                <div>DFT Amount :</div>
                 <input
                   className='border-none w-4/5 bg-blue-200 rounded outline-none mx-auto p-1 pl-3 mt-2 shadow-lg'
                   onChange={(e) => setSendDFTAmount(e.target.value)}

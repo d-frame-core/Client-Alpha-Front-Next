@@ -115,7 +115,7 @@ function LearnMore() {
         <DialogActions>
           <button
             onClick={handleClose}
-            className='btncl1'>
+            className='bg-blue-400 text-white px-2 py-1 rounded'>
             Close
           </button>
         </DialogActions>
@@ -145,7 +145,7 @@ function LearnMore() {
         <DialogActions>
           <button
             onClick={handleCloseDetail}
-            className='btncl1'>
+            className='bg-blue-400 text-white px-2 py-1 rounded'>
             Close
           </button>
         </DialogActions>

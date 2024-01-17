@@ -9,7 +9,7 @@ export default function UserDex() {
   const [detail, setDetail] = useState(null);
   async function fetchDataBackend() {
     await fetch(
-      'https://client-backend-402017.el.r.appspot.com//websites/admin/get-500-sites',
+      'https://client-backend-402017.el.r.appspot.com/websites/admin/get-500-sites',
       {
         method: 'GET',
         cache: 'no-cache',

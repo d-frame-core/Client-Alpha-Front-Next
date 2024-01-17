@@ -182,9 +182,9 @@ const CreateSurveyPopup = () => {
     <div>
       <Button
         variant='contained'
-        className='mr-8 text-[24px]'
+        className='mr-8 text-xl bg-blue-900'
         onClick={handleClickOpen}>
-        <AddIcon className='mr-2' /> Create Ad
+        <AddIcon className='mr-2' /> Create Survey
       </Button>
       <Dialog
         open={open}
@@ -374,6 +374,7 @@ const CreateSurveyPopup = () => {
             <Button
               type='submit'
               variant='contained'
+              className='bg-sky-600'
               color='primary'>
               Create
             </Button>

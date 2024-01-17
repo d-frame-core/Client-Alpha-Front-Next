@@ -13,7 +13,7 @@ const UserWebsiteTagging: React.FC = () => {
     setNewTag(null);
     setExistingTags(null);
     await fetch(
-      'https://client-backend-402017.el.r.appspot.com//tags/admin/getAll',
+      'https://client-backend-402017.el.r.appspot.com/tags/admin/getAll',
       {
         method: 'GET',
         cache: 'no-cache',
@@ -32,7 +32,7 @@ const UserWebsiteTagging: React.FC = () => {
 
   async function addTag() {
     await fetch(
-      'https://client-backend-402017.el.r.appspot.com//tags/admin/createTag',
+      'https://client-backend-402017.el.r.appspot.com/tags/admin/createTag',
       {
         method: 'POST',
         headers: {
@@ -53,7 +53,7 @@ const UserWebsiteTagging: React.FC = () => {
 
   async function changeTagStatus(id: string) {
     await fetch(
-      `https://client-backend-402017.el.r.appspot.com//tags/admin/statusChange/${id}`,
+      `https://client-backend-402017.el.r.appspot.com/tags/admin/statusChange/${id}`,
       {
         method: 'PUT',
       }

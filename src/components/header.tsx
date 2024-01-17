@@ -36,7 +36,7 @@ function Header() {
   };
   return (
     <header className='w-[100%] bg-gradient-to-r from-blue-800 via-blue-500 to-gray-300 flex justify-end p-2'>
-      <div className='w-12 h-12 rounded-full bg-white mr-4'>
+      <div className='w-12 h-12 rounded-full bg-white mr-2'>
         <Image
           src={clientData?.profileImage ? clientData.profileImage : ''}
           width={12}
@@ -45,7 +45,7 @@ function Header() {
           className='rounded-full w-full h-full border border-blue-300'
         />
       </div>
-      <p className='my-auto mr-4'>{clientData?.companyName.slice(0, 9)}</p>
+      <p className='my-auto mr-4'>{clientData?.companyName}</p>
       <div onClick={handleLogout}>
         <div className='px-4 h-8 cursor-pointer mt-2 pt-[2px] bg-blue-600 text-center text-white rounded-lg'>
           <LogoutIcon />

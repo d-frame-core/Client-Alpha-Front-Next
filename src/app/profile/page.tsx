@@ -26,8 +26,6 @@ interface CompanyData {
 
 function Profile() {
   const [openImageToast, setOpenImageToast] = useState(false);
-  const [openToast, setOpenToast] = useState(false);
-  const [edit, setEdit] = useState(false);
   const { setClientData, clientData } = useContext(AppContext);
   const [image, setImage] = useState('');
   const [data, setData] = useState<CompanyData>();
@@ -37,9 +35,6 @@ function Profile() {
   const [showEditForm, setShowEditForm] = useState(false);
 
   const onSubmit = (formData: any) => {
-    // Handle the form submission, formData will contain the updated values
-    console.log(formData);
-    // You can update the data in your state or perform other actions here
     setTimeout(() => {
       fetchUserData();
     }, 1000);
@@ -223,15 +218,15 @@ function Profile() {
 
   return (
     <div>
-      <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 '>
+      <div className='m-6 bg-[#DDE2EA] rounded-lg py-4 px-6 text-black '>
         <p className='text-[28px]'>Profile</p>
 
         <div className='mt-4 bg-white rounded-lg p-6 flex mb-8 min-h-[70vh]'>
           <div className='w-[25%]'>
             <div className='w-[160px] h-[160px] rounded-full mx-auto'>
               {!showEditForm ? (
-                <Image
-                  src={data?.profileImage ? data.profileImage : ''}
+                <img
+                  src={data?.profileImage ? data.profileImage : 'dframe.png'}
                   width={160}
                   height={160}
                   alt='Profile'
@@ -242,7 +237,9 @@ function Profile() {
                   <div className='relative'>
                     {/* Display the selected image */}
                     <img
-                      src={data?.profileImage}
+                      src={
+                        data?.profileImage ? data?.profileImage : 'dframe.png'
+                      }
                       width={160}
                       height={160}
                       alt='Selected Image'
@@ -405,6 +402,7 @@ function Profile() {
                     <Button
                       variant='contained'
                       color='primary'
+                      className='bg-blue-900'
                       onClick={editUserFunction}>
                       Save
                     </Button>
@@ -412,6 +410,7 @@ function Profile() {
                     <Button
                       variant='contained'
                       color='primary'
+                      className='bg-blue-900'
                       onClick={() => setShowEditForm(true)}
                       type='submit'>
                       Edit

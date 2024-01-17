@@ -60,7 +60,7 @@ function Sidebar() {
         <div className='py-[4px] pl-6'>
           {typeof window !== 'undefined' &&
           window.location.pathname === data.link ? (
-            <div className='flex justify-left text-[#1B2B65] pl-2 p-2 bg-white rounded-l-lg -mr-2'>
+            <div className='flex justify-left text-white pl-2 p-2 rounded-l-lg -mr-2'>
               <p>{data.icon}</p>
               <p className='pl-6'>{data.name}</p>
             </div>

@@ -9,7 +9,8 @@ type DexModalProps = {
     walletAddress: string,
     key: string,
     amount: string,
-    rewardId: string
+    rewardId: string,
+    fromAddress: string
   ) => void;
   detail?: any;
 };
@@ -21,15 +22,22 @@ const RewardsRequestModal: React.FC<DexModalProps> = ({
   detail,
 }) => {
   const [key, setKey] = useState('');
+  const [fromAddress, setFromAddress] = useState('');
   async function handleStatus() {
     if (onStatus && onClose) {
-      await onStatus(detail?.publicAddress, key, detail?.amount, detail?._id);
+      await onStatus(
+        detail?.publicAddress,
+        key,
+        detail?.amount,
+        detail?._id,
+        fromAddress
+      );
       onClose();
     }
   }
   return (
     <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50'>
-      <div className='bg-white text-black p-6 rounded-md max-w-[40vw] min-w-[40vw] min-h-[30vh] max-h-[30vh]'>
+      <div className='bg-white text-black p-6 rounded-md max-w-[40vw] min-w-[40vw] min-h-[35vh] max-h-[35vh]'>
         <h2 className='text-xl font-bold mb-4'>Reward Request</h2>
         <div className='flex my-4 justify-around'>
           <div className='mr-2'>
@@ -44,6 +52,15 @@ const RewardsRequestModal: React.FC<DexModalProps> = ({
           <div className='mb-4'>
             <span className='font-semibold'>Status:</span> {detail?.status}
           </div>
+        </div>
+        <div className='flex justify-evenly w-full my-4'>
+          <div>Enter Public Key: </div>
+          <input
+            className='w-1/2 border-2 border-blue-600'
+            type='text'
+            value={fromAddress}
+            onChange={(e) => setFromAddress(e.target.value)}
+          />
         </div>
         <div className='flex justify-evenly w-full my-4'>
           <div>Enter Private Key: </div>

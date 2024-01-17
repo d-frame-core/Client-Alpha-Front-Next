@@ -241,10 +241,11 @@ function Profile() {
                   <StyledTableRow key={index}>
                     <StyledTableCell
                       component='th'
+                      align='center'
                       scope='row'>
                       {row.surveyName}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.statusCampaign}
                     </StyledTableCell>
                     <StyledTableCell
@@ -274,13 +275,13 @@ function Profile() {
                         )}
                       </div>
                     </StyledTableCell> */}
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.totalReward}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.startDate}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.endDate}
                     </StyledTableCell>
                     <StyledTableCell

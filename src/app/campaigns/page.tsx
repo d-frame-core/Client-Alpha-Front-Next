@@ -241,13 +241,14 @@ function Profile() {
                   <StyledTableRow key={index}>
                     <StyledTableCell
                       component='th'
+                      align='center'
                       scope='row'>
                       {row.adName}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.bidAmount}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.perDay}
                     </StyledTableCell>
                     <StyledTableCell
@@ -256,16 +257,16 @@ function Profile() {
                       onClick={() => handleClickOpen(index)}>
                       <VisibilityIcon />
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.campaignType}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.perDay}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.startDate}
                     </StyledTableCell>
-                    <StyledTableCell align='right'>
+                    <StyledTableCell align='center'>
                       {row.endDate}
                     </StyledTableCell>
                   </StyledTableRow>
@@ -281,18 +282,19 @@ function Profile() {
         <DialogTitle>Campaign</DialogTitle>
         <DialogContent>
           <p className='text-center text-[28px]'>
-            {singleDetails.campaignName}
+            {singleDetails?.campaignName}
           </p>
-          <div className='mt-4 m-auto'>
-            {singleDetails.adType == 'Image' ? (
+          <div className='mt-4 m-auto flex justify-center'>
+            {singleDetails?.adType == 'image' ? (
               <img
                 src={
-                  singleDetails.image
-                    ? singleDetails.image.replace(/ /g, '%20')
+                  singleDetails?.image
+                    ? singleDetails?.image.replace(/ /g, '%20')
                     : 'https://aioseo.com/wp-content/uploads/2021/04/how-to-find-and-fix-404-errors-in-wordpress.png.webp'
                 }
                 alt='errormage'
-                width={200}
+                width={400}
+                className=''
                 style={{ marginTop: '20px' }}
               />
             ) : (
@@ -303,8 +305,8 @@ function Profile() {
               >
                 <source
                   src={
-                    singleDetails.image
-                      ? singleDetails.image
+                    singleDetails?.image
+                      ? singleDetails?.image
                       : 'https://www.youtube.com/embed/YKaj1HUcYt0?controls=1'
                   }
                   type='video/mp4'
@@ -321,55 +323,55 @@ function Profile() {
                   <span className='text-gray-700 font-semibold mr-4'>
                     Ad Name
                   </span>
-                  : {singleDetails.adName}
+                  : {singleDetails?.adName}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Ad Content
                   </span>
-                  : {singleDetails.adContent}
+                  : {singleDetails?.adContent}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Start Date
                   </span>
-                  : {singleDetails.startDate}
+                  : {singleDetails?.startDate}
                 </p>
-                <p className='w-[100%] my-2'>
+                {/* <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Start Time
                   </span>
-                  : {singleDetails.startTime}
-                </p>
+                  : {singleDetails?.startTime}
+                </p> */}
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     End Date
                   </span>
-                  : {singleDetails.endDate}
+                  : {singleDetails?.endDate}
                 </p>
-                <p className='w-[100%] my-2'>
+                {/* <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     End Time
                   </span>
-                  : {singleDetails.endTime}
-                </p>
+                  : {singleDetails?.endTime}
+                </p> */}
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Bid Amount
                   </span>
-                  : {singleDetails.bidAmount}
+                  : {singleDetails?.bidAmount}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Per Day
                   </span>
-                  : {singleDetails.perDay}
+                  : {singleDetails?.perDay}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Total Days
                   </span>
-                  : {singleDetails.totalDays}
+                  : {singleDetails?.totalDays}
                 </p>
               </>
             ) : (
@@ -398,43 +400,43 @@ function Profile() {
                   <span className='text-gray-700 font-semibold mr-4'>
                     Start Date
                   </span>
-                  : {singleDetails.startDate}
+                  : {singleDetails?.startDate}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Start Time
                   </span>
-                  : {singleDetails.startTime}
+                  : {singleDetails?.startTime}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     End Date
                   </span>
-                  : {singleDetails.endDate}
+                  : {singleDetails?.endDate}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     End Time
                   </span>
-                  : {singleDetails.endTime}
+                  : {singleDetails?.endTime}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Bid Amount
                   </span>
-                  : {singleDetails.bidAmount}
+                  : {singleDetails?.bidAmount}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Per Day
                   </span>
-                  : {singleDetails.perDay}
+                  : {singleDetails?.perDay}
                 </p>
                 <p className='w-[100%] my-2'>
                   <span className='text-gray-700 font-semibold mr-4'>
                     Total Days
                   </span>
-                  : {singleDetails.totalDays}
+                  : {singleDetails?.totalDays}
                 </p>
               </>
             )}

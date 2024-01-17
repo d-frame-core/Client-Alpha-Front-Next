@@ -74,6 +74,11 @@ const Sidebar = () => {
                 href={'/admin/user-kyc'}>
                 <ContactMail /> <span className='ml-2'>User KYC</span>
               </Link>
+              <Link
+                className='flex items-center mb-2'
+                href={'/admin/user-rewards'}>
+                <CurrencyExchange /> <span className='ml-2'>User Reward</span>
+              </Link>
 
               <Link
                 className='flex items-center mb-2'

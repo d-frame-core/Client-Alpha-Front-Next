@@ -8,10 +8,13 @@ const Info: React.FC = () => {
   const [infoData, setInfoData] = useState<any>(null);
 
   const fetchData = async () => {
-    await fetch('http://localhost:8080/userinfo/admin/allInfo', {
-      method: 'GET',
-      cache: 'no-cache',
-    })
+    await fetch(
+      'https://client-backend-402017.el.r.appspot.com/userinfo/admin/allInfo',
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setInfoData(data);
@@ -33,8 +36,8 @@ const Info: React.FC = () => {
         <div className='bg-blue-100 p-4 rounded shadow text-black'>
           <h2 className='text-lg font-semibold mb-2'>{sectionName}</h2>
           <div className='grid grid-cols-2 gap-4'>
-            <div>Total: {statusData.total}</div>
-            {statusData.status.map((status: any) => (
+            <div>Total: {statusData?.total}</div>
+            {statusData.status?.map((status: any) => (
               <div key={status._id}>
                 {status._id}: {status.total}
               </div>
@@ -54,10 +57,10 @@ const Info: React.FC = () => {
         <>
           <div className='my-8 text-2xl text-center text-black'>
             <div className='font-semibold'>
-              Client Count: {infoData.clientInfo.total} users
+              Client Count: {infoData?.clientInfo?.total} users
             </div>
             <div className='font-semibold'>
-              User Count: {infoData.usersInfo.total} users
+              User Count: {infoData?.usersInfo?.total} users
             </div>
           </div>
           <div className='flex flex-wrap justify-evenly items-center gap-32'>
