@@ -77,7 +77,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`md:w-[100%] h-[100vh] bg-gradient-to-b from-indigo-700 via-sky-600 to-cyan-500 shadow border border-black`}>
+      className={`h-full bg-gradient-to-b from-indigo-700 via-sky-600 to-cyan-500 shadow border border-black`}>
       {/* logo */}
 
       <div>

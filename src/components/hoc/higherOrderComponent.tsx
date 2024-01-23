@@ -31,12 +31,14 @@ function withSidebarAndHeader(WrappedComponent: WrappedComponentType) {
             ☰
           </button>
         </div>
-        <div className='hidden md:block w-[20%]'>
+        <div className='hidden md:block w-[20%] h-screen'>
           <Sidebar />
         </div>
-        <div className='md:w-[84%] w-full'>
+        <div className='md:w-[80%] w-full'>
           <Header />
-          <WrappedComponent {...props} />
+          <div className='mt-24'>
+            <WrappedComponent {...props} />
+          </div>
         </div>
       </div>
     );
