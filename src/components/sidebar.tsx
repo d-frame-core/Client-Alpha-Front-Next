@@ -103,7 +103,7 @@ function Sidebar() {
       </ul>
 
       {/* help and learn  */}
-      <div className='bg-[#1B2B65] w-[85%] mx-auto mt-20 rounded-lg text-center text-white pb-2'>
+      <div className='bg-[#1B2B65] w-[85%] mx-auto mt-16 rounded-lg text-center text-white pb-2'>
         <div className='relative'>
           <div className='m-auto absolute -top-4 left-[40%] bg-[#AABBFA] w-10 h-10 pt-[4px] rounded-full'>
             <div className='m-auto  bg-[#1B2B65] w-8 h-8 pt-[3px] text-[20px] rounded-full'>
