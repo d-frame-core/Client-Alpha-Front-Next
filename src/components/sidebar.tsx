@@ -57,15 +57,15 @@ function Sidebar() {
   function TabBar({ data }: { data: TabOptionInterface }) {
     return (
       <Link href={data.link}>
-        <div className='py-[4px] pl-6'>
+        <div className='py-[1px] pl-6'>
           {typeof window !== 'undefined' &&
           window.location.pathname === data.link ? (
-            <div className='flex justify-left text-white pl-2 p-2 rounded-l-lg -mr-2'>
+            <div className='flex justify-left text-white pl-2 p-[0.3rem] rounded-l-lg -mr-2'>
               <p>{data.icon}</p>
               <p className='pl-6'>{data.name}</p>
             </div>
           ) : (
-            <div className='flex justify-left text-white hover:text-[#1B2B65] pl-2 p-2 bg-[#1B2B65] hover:bg-white hover:rounded-l-lg hover:-mr-2'>
+            <div className='flex justify-left text-white hover:text-[#1B2B65] pl-2 p-[0.3rem] bg-[#1B2B65] hover:bg-white hover:rounded-l-lg hover:-mr-2'>
               <p>{data.icon}</p>
               <p className='pl-6'>{data.name}</p>
             </div>

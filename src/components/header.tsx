@@ -36,7 +36,7 @@ function Header() {
   };
   return (
     <header className='absolute top-0 left-[20%] w-[80%] bg-gradient-to-r from-blue-800 via-blue-500 to-gray-300 flex justify-end p-2'>
-      <div className='w-12 h-12 rounded-full bg-white mr-2'>
+      <div className='w-12 h-10 rounded-full bg-white mr-2'>
         <Image
           src={clientData?.profileImage ? clientData.profileImage : ''}
           width={12}
